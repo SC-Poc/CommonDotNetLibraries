@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>LykkeCore.Common</id>
-    <version>$version$</version>    
+    <id>LykkeCore.Common</id>    
     <authors>Lykke</authors>
     <owners>Lykke</owners>
     <licenseUrl>https://github.com/LykkeCity/CommonDotNetLibraries/blob/master/LICENSE</licenseUrl>
@@ -10,6 +9,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Common Lykke library for Lykke's applications</description>    
     <copyright>Copyright 2016</copyright>
-    <tags>Lykke Common</tags>
+    <tags>Lykke Common</tags>	
   </metadata>
 </package>
