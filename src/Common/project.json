@@ -17,8 +17,5 @@
   "frameworks": {
     "netcoreapp1.0": {
     }
-  },
-  "buildOptions": {
-    "outputName": "LykkeCore.Common"
   }
 }
