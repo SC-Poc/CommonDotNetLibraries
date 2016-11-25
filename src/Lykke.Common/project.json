@@ -17,5 +17,17 @@
   "frameworks": {
     "netcoreapp1.0": {
     }
+  },
+  "packOptions": {
+    "licenseUrl": "https://github.com/LykkeCity/CommonDotNetLibraries/blob/master/LICENSE",
+    "owners": [
+      "Lykke"
+    ],
+    "projectUrl": "https://github.com/LykkeCity/CommonDotNetLibraries",
+    "requireLicenseAcceptance": false,
+    "summary": "Common Lykke library for Lykke's applications",
+    "tags": [
+      "Lykke Common"      
+    ]
   }
 }
