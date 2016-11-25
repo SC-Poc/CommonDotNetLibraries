@@ -11,5 +11,9 @@
     <description>Common Lykke library for Lykke's applications</description>    
     <copyright>Copyright 2016</copyright>
     <tags>Lykke Common</tags>	
+	<dependencies>
+      <group targetFramework=".NETCoreApp1.0">        
+      </group>
+    </dependencies>
   </metadata>
 </package>
