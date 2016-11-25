@@ -20,7 +20,7 @@
   },
   "scripts": {
     "postcompile": [
-      "dotnet pack --no-build --configuration %compile:Configuration%"
+      "dotnet pack --no-build --configuration %compile:Configuration% --o ./artifacts"
     ]
   }
 }
