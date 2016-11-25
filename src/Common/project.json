@@ -17,10 +17,5 @@
   "frameworks": {
     "netcoreapp1.0": {      
     }
-  },
-  "scripts": {
-    "postcompile": [
-      "dotnet pack --no-build --configuration %compile:Configuration% --output ./artifacts"
-    ]
   }
 }
