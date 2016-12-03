@@ -42,11 +42,11 @@ namespace Common.HttpRemoteRequests
             return string.Empty;
         }
 
-        public async Task<string> GetRequest(string url)
+        public async Task<string> GetRequest(string url, string contentType = "text/html")
         {
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
             webRequest.Method = "GET";
-            webRequest.ContentType = "text/html";
+            webRequest.ContentType = contentType;
             var webResponse = await webRequest.GetResponseAsync();
             using (var receiveStream = webResponse.GetResponseStream())
             {
