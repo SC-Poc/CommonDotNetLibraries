@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using Common.Log;
 
 namespace Common
 {
-    public abstract class ProducerConsumer<T> where T:class 
+    public abstract class ProducerConsumer<T> where T:class, IStartable 
     {
         private readonly string _componentName;
         private readonly ILog _log;

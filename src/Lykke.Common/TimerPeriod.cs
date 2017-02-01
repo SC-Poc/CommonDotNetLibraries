@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Autofac;
 using Common.Log;
 
 namespace Common
@@ -10,7 +11,7 @@ namespace Common
     }
 
     // Таймер, который исполняет метод Execute через определенный интервал после окончания исполнения метода Execute
-    public abstract class TimerPeriod : IStarter, ITimerCommand
+    public abstract class TimerPeriod : IStartable, ITimerCommand
     {
         private readonly string _componentName;
         private readonly int _periodMs;
