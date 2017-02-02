@@ -5,7 +5,7 @@ using Common.Log;
 
 namespace Common
 {
-    public abstract class ProducerConsumer<T> where T:class, IStartable 
+    public abstract class ProducerConsumer<T> : IStartable, IStopable where T:class 
     {
         private readonly string _componentName;
         private readonly ILog _log;
@@ -22,7 +22,7 @@ namespace Common
 
         private async Task Handler()
         {
-            while (_started)
+            while (_task != null)
             {
                 try
                 {
@@ -46,21 +46,33 @@ namespace Common
 
 
 
+        private Task _task;
+
         private readonly object _lockobject = new object();
-        private bool _started;
-        protected void Start()
+        public void Start()
         {
             lock (_lockobject)
             {
-                if (_started)
+                if (_task != null)
                     return;
-                _started = true;
-
-                Task.Run(async () => await Handler());
+                _task = Handler();
             }
         }
 
 
+        public void Stop()
+        {
+            lock (_lockobject)
+            {
+                if (_task == null)
+                    return;
+
+                var task = _task;
+                _task = null;
+                task.Wait();
+            }
+
+        }
 
     }
 }
