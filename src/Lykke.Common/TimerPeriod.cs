@@ -37,7 +37,7 @@ namespace Common
         {
             try
             {
-                _log.WriteFatalErrorAsync(_componentName, "Loop", "", exception).Wait();
+                _log?.WriteFatalErrorAsync(_componentName, "Loop", "", exception).Wait();
             }
             catch (Exception)
             {
@@ -64,6 +64,8 @@ namespace Common
 
         public virtual void Start()
         {
+            if (_log == null)
+                throw new Exception("Logger has to be inited for: "+ _componentName);
 
             if (Working)
                 return;
