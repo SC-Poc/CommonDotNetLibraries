@@ -11,13 +11,13 @@ namespace Common
     }
 
     // Таймер, который исполняет метод Execute через определенный интервал после окончания исполнения метода Execute
-    public abstract class TimerPeriod : IStartable, ITimerCommand
+    public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
     {
         private readonly string _componentName;
         private readonly int _periodMs;
-        private readonly ILog _log;
+        private ILog _log;
 
-        protected TimerPeriod(string componentName, int periodMs, ILog log)
+        protected TimerPeriod(string componentName, int periodMs, ILog log = null)
         {
             _componentName = componentName;
 
@@ -25,7 +25,13 @@ namespace Common
             _log = log;
         }
 
+        protected void SetLogger(ILog log)
+        {
+            _log = log;
+        }
+
         public bool Working { get; private set; }
+        private Task _task;
 
         private void LogFatalError(Exception exception)
         {
@@ -63,13 +69,18 @@ namespace Common
                 return;
 
             Working = true;
-            Task.Run(async () => { await ThreadMethod(); });
+            _task = ThreadMethod();
 
         }
 
         public void Stop()
         {
+
             Working = false;
+            var task = _task;
+            _task = null;
+
+            task?.Wait();
         }
 
         public string GetComponentName()
