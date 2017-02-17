@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Log;
@@ -9,8 +11,10 @@ namespace Common
     {
         private readonly string _componentName;
         private readonly ILog _log;
-
-        private readonly AsyncQueue<T> _queue = new AsyncQueue<T>();
+        private readonly ManualResetEventSlim _done = new ManualResetEventSlim(false);
+        private readonly ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+        private volatile CancellationTokenSource ts = null;
+        private readonly object _lockobject = new object();
 
         protected abstract Task Consume(T item);
 
@@ -20,59 +24,70 @@ namespace Common
             _log = log;
         }
 
-        private async Task Handler()
+        private void StartThread()
         {
-            while (_task != null)
+            _done.Reset();
+
+            ts = new CancellationTokenSource();
+            var token = ts.Token;
+
+            Task t = Task.Run(async () =>
             {
-                try
+                while (!token.IsCancellationRequested)
                 {
-                    var item = await _queue.DequeueAsync();
-                    await Consume(item);
+                    try
+                    {
+                        T item = null;
+                        if (_queue.TryDequeue(out item))
+                        {
+                            await Consume(item);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
+                    }
                 }
-                catch (Exception exception)
-                {
-                    await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
-                }
-            }
+
+                _done.Set();
+            });
         }
 
         protected void Produce(T item)
         {
-            lock (_queue)
-                _queue.Enqueue(item); 
+            _queue.Enqueue(item); 
   
             Start();
         }
 
-
-
-        private Task _task;
-
-        private readonly object _lockobject = new object();
         public void Start()
         {
-            lock (_lockobject)
+            if (ts == null)
             {
-                if (_task != null)
-                    return;
-                _task = Handler();
+                lock (_lockobject)
+                {
+                    if (ts == null)
+                    {
+                        StartThread();
+                    }
+                }
             }
         }
-
 
         public void Stop()
         {
-            lock (_lockobject)
+            if (ts != null)
             {
-                if (_task == null)
-                    return;
-
-                var task = _task;
-                _task = null;
-                task.Wait();
+                lock (_lockobject)
+                {
+                    if (ts != null)
+                    {
+                        ts.Cancel();
+                        ts = null;
+                    }
+                    _done.Wait();
+                }
             }
-
         }
-
     }
 }
