@@ -7,12 +7,12 @@ using Common.Log;
 
 namespace Common
 {
-    public abstract class ProducerConsumer<T> : IStartable, IStopable where T:class 
+    public abstract class ProducerConsumer<T> : IStartable, IStopable, IDisposable where T:class 
     {
         private readonly string _componentName;
         private readonly ILog _log;
         private readonly ManualResetEventSlim _done = new ManualResetEventSlim(false);
-        private readonly ConcurrentQueue<T> _queue = new ConcurrentQueue<T>();
+        private readonly BlockingCollection<T> _queue = new BlockingCollection<T>();
         private volatile CancellationTokenSource ts = null;
         private readonly object _lockobject = new object();
 
@@ -27,7 +27,7 @@ namespace Common
         private void StartThread()
         {
             _done.Reset();
-
+            
             ts = new CancellationTokenSource();
             var token = ts.Token;
 
@@ -37,8 +37,7 @@ namespace Common
                 {
                     try
                     {
-                        T item = null;
-                        if (_queue.TryDequeue(out item))
+                        foreach(T item in _queue.GetConsumingEnumerable(token))
                         {
                             await Consume(item);
                         }
@@ -55,8 +54,8 @@ namespace Common
 
         protected void Produce(T item)
         {
-            _queue.Enqueue(item); 
-  
+            _queue.Add(item);
+
             Start();
         }
 
@@ -89,5 +88,17 @@ namespace Common
                 }
             }
         }
+
+        #region "IDisposable implementation"
+
+        public void Dispose()
+        {
+            if (_done != null) { _done.Dispose(); }
+            if (_queue != null) { _queue.Dispose(); }
+
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }
