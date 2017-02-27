@@ -12,9 +12,12 @@ if (!version)
 	console.log("No version provided");
 
 jsonfile.readFile(file, function (err, project) {
-	// Patch the project.version 
-	project.version = version;
-	jsonfile.writeFile(file, project, { spaces: 2 }, function (err) {
-		console.error(err);
-	});
-})
+    // Patch the project.version 
+    project.version = version;
+    jsonfile.writeFile(file, project, { spaces: 2 }, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("The file was saved!");
+    });
+});
