@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Common", "src\Lykke.Common\Common.xproj", "{5E934B1B-8776-4986-8780-D84778E560F5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0B6615DC-BCC1-4406-A0BB-1C7D6A326882}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CF1FEB11-C0EE-4569-90B3-227FB3C4A328}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{9E48D54B-C96D-4B84-A538-E645FA47B6F7}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Common.Tests", "test\unit\Common.Tests\Common.Tests.xproj", "{67F87E5A-FDA9-4439-895E-F7E23F2BF9E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Common", "src\Lykke.Common\Lykke.Common.csproj", "{5E934B1B-8776-4986-8780-D84778E560F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "test\unit\Common.Tests\Common.Tests.csproj", "{67F87E5A-FDA9-4439-895E-F7E23F2BF9E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,8 +32,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5E934B1B-8776-4986-8780-D84778E560F5} = {CF1FEB11-C0EE-4569-90B3-227FB3C4A328}
 		{9E48D54B-C96D-4B84-A538-E645FA47B6F7} = {0B6615DC-BCC1-4406-A0BB-1C7D6A326882}
+		{5E934B1B-8776-4986-8780-D84778E560F5} = {CF1FEB11-C0EE-4569-90B3-227FB3C4A328}
 		{67F87E5A-FDA9-4439-895E-F7E23F2BF9E6} = {9E48D54B-C96D-4B84-A538-E645FA47B6F7}
 	EndGlobalSection
 EndGlobal
