@@ -8,6 +8,12 @@
     <PackageProjectUrl>https://github.com/LykkeCity/CommonDotNetLibraries</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/LykkeCity/CommonDotNetLibraries/blob/master/LICENSE</PackageLicenseUrl>
     <Version>1.0.1</Version>
+    <Authors>Lykke</Authors>
+    <Description>Lykke common tools and utilities</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright 2017 (c) Lykke Corp. All rights reserved.</Copyright>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <NeutralLanguage>en-001</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
