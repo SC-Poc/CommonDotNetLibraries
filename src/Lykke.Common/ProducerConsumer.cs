@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Log;
 
 namespace Common
 {
-    public abstract class ProducerConsumer<T> : IStartable, IStopable, IDisposable where T:class 
+    public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
+
     {
         private readonly string _componentName;
         private readonly ILog _log;
-        private readonly ManualResetEventSlim _done = new ManualResetEventSlim(false);
-        private readonly BlockingCollection<T> _queue = new BlockingCollection<T>();
-        private volatile CancellationTokenSource ts = null;
-        private readonly object _lockobject = new object();
+        private readonly object _startStopLockobject = new object();
+
+        private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
 
         protected abstract Task Consume(T item);
 
@@ -24,81 +23,89 @@ namespace Common
             _log = log;
         }
 
-        private void StartThread()
+        private bool _started;
+        private Task _threadTask;
+        private TaskCompletionSource<T> _last;
+
+        private TaskCompletionSource<T> Dequeue()
         {
-            _done.Reset();
-            
-            ts = new CancellationTokenSource();
-            var token = ts.Token;
+            lock (_queue)
+                return _queue.Dequeue();
+        }
 
-            Task t = Task.Run(async () =>
+        private async Task StartTask()
+        {
+            while (true)
             {
-                while (!token.IsCancellationRequested)
+                try
                 {
-                    try
-                    {
-                        foreach(T item in _queue.GetConsumingEnumerable(token))
-                        {
-                            await Consume(item);
-                        }
-                    }
-                    catch (Exception exception)
-                    {
-                        await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
-                    }
-                }
+                    var task = Dequeue();
+                    var value = await task.Task;
 
-                _done.Set();
-            });
+                    if (value == null)
+                        return;
+
+                    await Consume(value);
+                }
+                catch (Exception exception)
+                {
+                    await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
+                }
+            }
+
         }
 
         protected void Produce(T item)
         {
-            _queue.Add(item);
-
             Start();
+
+            lock (_queue)
+            {
+                var last = _last;
+                _last = new TaskCompletionSource<T>();
+                _queue.Enqueue(_last);
+                last.SetResult(item);
+            }
+
         }
 
         public void Start()
         {
-            if (ts == null)
+            if (_started)
+                return;
+
+            lock (_startStopLockobject)
             {
-                lock (_lockobject)
-                {
-                    if (ts == null)
-                    {
-                        StartThread();
-                    }
-                }
+                if (_started)
+                    return;
+
+                _started = true;
             }
+
+
+            _last = new TaskCompletionSource<T>();
+            lock (_queue)
+                _queue.Enqueue(_last);
+
+            _threadTask = StartTask();
         }
 
         public void Stop()
         {
-            if (ts != null)
+            if (!_started)
+                return;
+
+            lock (_startStopLockobject)
             {
-                lock (_lockobject)
-                {
-                    if (ts != null)
-                    {
-                        ts.Cancel();
-                        ts = null;
-                    }
-                    _done.Wait();
-                }
+                if (!_started)
+                    return;
+                _started = false;
             }
+
+            _last.SetResult(null);
+            _threadTask.Wait();
         }
-
-        #region "IDisposable implementation"
-
-        public void Dispose()
-        {
-            if (_done != null) { _done.Dispose(); }
-            if (_queue != null) { _queue.Dispose(); }
-
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
+
+
 }

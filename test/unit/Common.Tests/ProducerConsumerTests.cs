@@ -35,7 +35,6 @@ namespace Common.Tests
 
             Assert.Equal(6, pc.Consumed.Count);
 
-            pc.Dispose();
         }
 
 

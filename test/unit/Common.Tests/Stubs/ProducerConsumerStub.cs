@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Log;
 
@@ -12,9 +9,9 @@ namespace Common.Tests.Stubs
     /// </summary>
     internal class ProducerConsumerStub : ProducerConsumer<string>
     {
-        private ConcurrentQueue<string> _consumed = new ConcurrentQueue<string>();
+        private readonly List<string> _consumed = new List<string>();
 
-        public IReadOnlyList<string> Consumed { get { return _consumed.ToList(); } }
+        public IReadOnlyList<string> Consumed => _consumed;
 
         public ProducerConsumerStub(string componentName, ILog log)
             : base(componentName, log)
@@ -23,12 +20,12 @@ namespace Common.Tests.Stubs
 
         public void ProduceMessage(string mes)
         {
-            this.Produce(mes);
+            Produce(mes);
         }
 
         protected override Task Consume(string item)
         {
-            _consumed.Enqueue(item);
+            _consumed.Add(item);
             return Task.FromResult(0);
         }
     }
