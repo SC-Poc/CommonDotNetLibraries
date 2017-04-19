@@ -10,7 +10,7 @@ namespace Common.Extensions
 		{
 			try
 			{
-				return Task.Run(async () => await task).Result;
+				return Task.Run(async () => await task.ConfigureAwait(false)).Result;
 			}
 			catch (AggregateException ex)
 			{
@@ -24,7 +24,7 @@ namespace Common.Extensions
 		{
 			try
 			{
-				Task.Run(async () => await task).Wait();
+				Task.Run(async () => await task.ConfigureAwait(false)).Wait();
 			}
 			catch (AggregateException ex)
 			{
@@ -33,5 +33,20 @@ namespace Common.Extensions
 				throw;
 			}
 		}
+
+	    public static async Task WithTimeout(this Task task, int delayMs)
+	    {
+	        if (await Task.WhenAny(task, Task.Delay(delayMs)) == task)
+	            return;
+	        throw new TimeoutException();
+	    }
+
+	    public static async Task<T> WithTimeout<T>(this Task<T> task, int delayMs)
+	    {
+	        if (await Task.WhenAny(task, Task.Delay(delayMs)) == task)
+	            return task.Result;
+	        throw new TimeoutException();
+	    }
 	}
+}
 }
