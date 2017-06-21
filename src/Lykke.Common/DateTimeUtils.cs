@@ -27,18 +27,20 @@ namespace Common
 
         public static DateTime TruncMiliseconds(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
         }
 
+        [Obsolete("Use RoundToMinute(DateTime)")]
         public static DateTime RoundSeconds(DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
         }
 
+        [Obsolete("Use RoundToMinute(DateTime, int)")]
         public static DateTime RoundToMinutes(DateTime dateTime, int minInterval)
         {
             var min = dateTime.Minute / minInterval * minInterval;
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, min, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, min, 0, dateTime.Kind);
         }
 
         // YYYY-MM-DD 12:00:00
@@ -119,12 +121,12 @@ namespace Common
         /// <returns>Округленная дата-время</returns>
         public static DateTime RoundToMinute(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year,dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0);
+            return new DateTime(dateTime.Year,dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
         }
 
 
         /// <summary>
-        ///  Уменьшаем точность до 5 минут
+        ///  Уменьшаем точность до <paramref name="min"/> минут
         /// </summary>
         /// <param name="dateTime">Исходное дата-время</param>
         /// <param name="min">5 - округляем до 5 минут</param>
@@ -133,7 +135,7 @@ namespace Common
         {
             var part = dateTime.Minute / min;
 
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, part * min, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, part * min, 0, dateTime.Kind);
         }
 
 
@@ -144,7 +146,29 @@ namespace Common
         /// <returns>Округленная дата-время</returns>
         public static DateTime RoundToHour(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, dateTime.Kind);
+        }
+
+        /// <summary>
+        /// Decreases date precision down to <paramref name="hour"/> hours
+        /// </summary>
+        /// <param name="dateTime">Source date</param>
+        /// <param name="hour">Amount of hours rounding to. 5 - rounding to 5 hours</param>
+        /// <returns>Rounded date</returns>
+        public static DateTime RoundToHour(this DateTime dateTime, int hour)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour / hour * hour, 0, 0, dateTime.Kind);
+        }
+
+        /// <summary>
+        /// Decreases date precision down to week. Shifts date to monday
+        /// </summary>
+        public static DateTime RoundToWeek(this DateTime dateTime)
+        {
+            var diff = dateTime.DayOfWeek - DayOfWeek.Monday;
+            var dt = dateTime.AddDays(diff == -1 ? -6 : -diff); // shifting to monday
+
+            return new DateTime(dt.Year, dt.Month, dt.Day, 0, 0, 0, dateTime.Kind);
         }
 
         /// <summary>
@@ -154,7 +178,7 @@ namespace Common
         /// <returns>Округленная дата-время</returns>
         public static DateTime RoundToMonth(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, dateTime.Month, 1, 0, 0, 0);
+            return new DateTime(dateTime.Year, dateTime.Month, 1, 0, 0, 0, dateTime.Kind);
         }
 
         /// <summary>
@@ -164,10 +188,9 @@ namespace Common
         /// <returns>Округленная дата-время</returns>
         public static DateTime RoundToYear(this DateTime dateTime)
         {
-            return new DateTime(dateTime.Year, 1, 1, 0, 0, 0);
+            return new DateTime(dateTime.Year, 1, 1, 0, 0, 0, dateTime.Kind);
         }
-
-
+        
         public static string ToIsoDate(this DateTime dateTime)
         {
             return dateTime.Year + "-" + dateTime.Month.ToString("00", CultureInfo.InvariantCulture) + "-" +
@@ -222,7 +245,7 @@ namespace Common
 
         public static DateTime SetTime(this DateTime src, int hours, int mins, int seconds)
         {
-            return new DateTime(src.Year, src.Month, src.Day, hours, mins, seconds);
+            return new DateTime(src.Year, src.Month, src.Day, hours, mins, seconds, src.Kind);
         }
 
         public static string YearLastTwoDigits(this int year)
@@ -259,11 +282,32 @@ namespace Common
             return value?.ToString("d");
         }
 
+        /// <summary>
+        /// Returns date of the first week's monday in the specified year.
+        /// </summary>
+        public static DateTime GetFirstWeekOfYear(int year, DateTimeKind kind = DateTimeKind.Utc)
+        {
+            var dt = new DateTime(year, 1, 1, 0, 0, 0, kind);
 
+            if (dt.DayOfWeek == DayOfWeek.Monday)
+            {
+                return dt;
+            }
 
+            var diff = DayOfWeek.Monday - dt.DayOfWeek;
 
+            return dt.AddDays(diff == 1 ? 1 : 7 + diff);
+        }
+
+        /// <summary>
+        /// Returns date of the first weeks' monday in that year.
+        /// </summary>
+        public static DateTime GetFirstWeekOfYear(DateTime dt)
+        {
+            var diff = dt.DayOfWeek - DayOfWeek.Monday;
+            var year = dt.AddDays(diff == -1 ? -6 : -diff).Year;
+
+            return GetFirstWeekOfYear(year, dt.Kind);
+        }
     }
-
-
-
 }
