@@ -46,14 +46,14 @@ namespace Common.Log
 
         public Task WriteErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.Message, dateTime);
+            WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
             return Task.FromResult(0);
         }
 
  
         public Task WriteFatalErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.Message, dateTime);
+            WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
             return Task.FromResult(0);
         }
 

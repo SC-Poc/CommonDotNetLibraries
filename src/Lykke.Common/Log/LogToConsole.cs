@@ -38,7 +38,7 @@ namespace Common.Log
             Console.WriteLine("Component: " + component);
             Console.WriteLine("Process: " + process);
             Console.WriteLine("Context: " + context);
-            Console.WriteLine("Message: " + exeption.Message);
+            Console.WriteLine("Message: " + exeption.GetBaseException().Message);
             Console.WriteLine("Stack: " + exeption.StackTrace);
             Console.WriteLine("---------END LOG INFO-------");
             Console.ForegroundColor = currentColor;
@@ -54,7 +54,7 @@ namespace Common.Log
             Console.WriteLine("Component: " + component);
             Console.WriteLine("Process: " + process);
             Console.WriteLine("Context: " + context);
-            Console.WriteLine("Message: " + exeption.Message);
+            Console.WriteLine("Message: " + exeption.GetBaseException().Message);
             Console.WriteLine("Stack: " + exeption.StackTrace);
             Console.WriteLine("---------END LOG INFO-------");
             Console.ForegroundColor = currentColor;
