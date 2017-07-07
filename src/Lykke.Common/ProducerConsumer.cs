@@ -7,9 +7,8 @@ using Common.Log;
 namespace Common
 {
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
-
     {
-        private readonly string _componentName;
+        protected readonly string _componentName;
         private readonly ILog _log;
         private readonly object _startStopLockobject = new object();
 
