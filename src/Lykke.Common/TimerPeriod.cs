@@ -75,9 +75,8 @@ namespace Common
 
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
-
             Working = false;
             var task = _task;
             _task = null;

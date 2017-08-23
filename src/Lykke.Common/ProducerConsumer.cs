@@ -68,7 +68,7 @@ namespace Common
 
         }
 
-        public void Start()
+        public virtual void Start()
         {
             if (_started)
                 return;
@@ -89,7 +89,7 @@ namespace Common
             _threadTask = StartTask();
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             if (!_started)
                 return;
