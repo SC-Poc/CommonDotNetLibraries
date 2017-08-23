@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Log;
@@ -32,6 +33,7 @@ namespace Common
 
         public bool Working { get; private set; }
         private Task _task;
+        private CancellationTokenSource _cancellation; 
 
         private void LogFatalError(Exception exception)
         {
@@ -46,19 +48,26 @@ namespace Common
 
         public abstract Task Execute();
 
-        private async Task ThreadMethod()
+        public virtual Task Execute(CancellationToken cancellation)
         {
-            while (Working)
+            // ReSharper disable once MethodSupportsCancellation
+            return Execute();
+        }
+
+        private async Task ThreadMethod(CancellationToken cancellation)
+        {
+            while (!cancellation.IsCancellationRequested)
             {
                 try
                 {
-                    await Execute();
+                    await Execute(cancellation);
                 }
                 catch (Exception exception)
                 {
                     LogFatalError(exception);
                 }
-                await Task.Delay(_periodMs);
+
+                await Task.Delay(_periodMs, cancellation);
             }
         }
 
@@ -71,17 +80,26 @@ namespace Common
                 return;
 
             Working = true;
-            _task = ThreadMethod();
 
+            _cancellation = new CancellationTokenSource();
+
+            _task = ThreadMethod(_cancellation.Token);
         }
 
         public virtual void Stop()
         {
-            Working = false;
-            var task = _task;
-            _task = null;
+            if (!Working)
+            {
+                return;
+            }
 
-            task?.Wait();
+            _cancellation.Cancel();
+
+            _task?.Wait();
+            _task = null;
+            _cancellation = null;
+
+            Working = false;
         }
 
         public string GetComponentName()
