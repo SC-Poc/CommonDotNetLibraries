@@ -67,7 +67,13 @@ namespace Common
                     LogFatalError(exception);
                 }
 
-                await Task.Delay(_periodMs, cancellation);
+                try
+                {
+                    await Task.Delay(_periodMs, cancellation);
+                }
+                catch (TaskCanceledException)
+                {
+                }
             }
         }
 
