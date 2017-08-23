@@ -78,5 +78,10 @@ namespace Common.Log
                 stopable.Stop();
             }
         }
+
+        public void Dispose()
+        {
+            Stop();
+        }
     }
 }

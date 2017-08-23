@@ -89,5 +89,10 @@ namespace Common
         {
             return _componentName;
         }
+
+        public void Dispose()
+        {
+            Stop();
+        }
     }
 }

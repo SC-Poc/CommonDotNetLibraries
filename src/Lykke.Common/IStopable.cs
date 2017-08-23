@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 namespace Common
 {
-    public interface IStopable
+    public interface IStopable : IDisposable
     {
         void Stop();
     }

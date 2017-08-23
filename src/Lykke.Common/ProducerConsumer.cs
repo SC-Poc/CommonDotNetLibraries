@@ -104,6 +104,11 @@ namespace Common
             _last.SetResult(null);
             _threadTask.Wait();
         }
+
+        public void Dispose()
+        {
+            Stop();
+        }
     }
 
 
