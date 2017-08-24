@@ -5,7 +5,6 @@
     <AssemblyName>Common.Tests</AssemblyName>
     <PackageId>Common.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net45+win8</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Lykke.Common\Lykke.Common.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Common\Lykke.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
