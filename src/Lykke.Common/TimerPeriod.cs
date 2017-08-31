@@ -35,13 +35,14 @@ namespace Common
         private Task _task;
         private CancellationTokenSource _cancellation; 
 
-        private void LogFatalError(Exception exception)
+        private async Task LogFatalErrorAsync(Exception exception)
         {
             try
             {
-                _log?.WriteFatalErrorAsync(_componentName, "Loop", "", exception).Wait();
+                await _log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
             }
-            catch (Exception)
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
             {
             }
         }
@@ -60,18 +61,26 @@ namespace Common
             {
                 try
                 {
-                    await Execute(cancellation);
-                }
-                catch (Exception exception)
-                {
-                    LogFatalError(exception);
-                }
+                    try
+                    {
+                        await Execute(cancellation);
+                    }
+                    catch (Exception exception)
+                    {
+                        await LogFatalErrorAsync(exception);
+                    }
 
-                try
-                {
-                    await Task.Delay(_periodMs, cancellation);
+                    try
+                    {
+                        await Task.Delay(_periodMs, cancellation);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                    }
                 }
-                catch (TaskCanceledException)
+                // Saves the loop if nothing didn't help
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch
                 {
                 }
             }
