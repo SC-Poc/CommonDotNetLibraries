@@ -38,20 +38,42 @@ namespace Common
             {
                 try
                 {
-                    var task = Dequeue();
-                    var value = await task.Task;
+                    try
+                    {
+                        var task = Dequeue();
+                        var value = await task.Task;
 
-                    if (value == null)
-                        return;
+                        if (value == null)
+                            return;
 
-                    await Consume(value);
+                        await Consume(value);
+                    }
+                    catch (Exception exception)
+                    {
+                        await LogErrorAsync(exception);
+                    }
                 }
-                catch (Exception exception)
+                // Saves the loop if nothing didn't help
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch
+                {
+                }
+            }
+        }
+
+        private async Task LogErrorAsync(Exception exception)
+        {
+            try
+            {
+                if (_log != null)
                 {
                     await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
                 }
             }
-
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
+            {
+            }
         }
 
         protected void Produce(T item)
