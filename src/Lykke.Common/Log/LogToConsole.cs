@@ -5,60 +5,91 @@ namespace Common.Log
 {
     public class LogToConsole : ILog
     {
+        private readonly object _colorSync = new object();
+
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            Console.WriteLine("---------LOG INFO-------");
-            Console.WriteLine("Component: "+ component);
-            Console.WriteLine("Process: " + process);
-            Console.WriteLine("Context: " + context);
-            Console.WriteLine("Info: " + info);
-            Console.WriteLine("---------END LOG INFO-------");
+            lock(_colorSync)
+                LogMessage(
+                    "INFO",
+                    component,
+                    process,
+                    context,
+                    info,
+                    dateTime);
             return Task.FromResult(0);
         }
 
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
             var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("---------LOG WARNING-------");
-            Console.WriteLine("Component: " + component);
-            Console.WriteLine("Process: " + process);
-            Console.WriteLine("Context: " + context);
-            Console.WriteLine("Info: " + info);
-            Console.WriteLine("---------END LOG INFO-------");
-            Console.ForegroundColor = currentColor;
+            lock (_colorSync)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                LogMessage(
+                    "WARNING",
+                    component,
+                    process,
+                    context,
+                    info,
+                    dateTime);
+                Console.ForegroundColor = currentColor;
+            }
             return Task.FromResult(0);
         }
 
-        public Task WriteErrorAsync(string component, string process, string context, Exception exeption, DateTime? dateTime = null)
+        public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("---------LOG ERROR-------");
-            Console.WriteLine("Component: " + component);
-            Console.WriteLine("Process: " + process);
-            Console.WriteLine("Context: " + context);
-            Console.WriteLine("Message: " + exeption.GetBaseException().Message);
-            Console.WriteLine("Stack: " + exeption.StackTrace);
-            Console.WriteLine("---------END LOG INFO-------");
-            Console.ForegroundColor = currentColor;
+            lock (_colorSync)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                LogMessage(
+                    "ERROR",
+                    component,
+                    process,
+                    context,
+                    GetExceptionString(exception),
+                    dateTime);
+                Console.ForegroundColor = currentColor;
+            }
             return Task.FromResult(0);
         }
 
 
-        public Task WriteFatalErrorAsync(string component, string process, string context, Exception exeption, DateTime? dateTime = null)
+        public Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             var currentColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("---------LOG FATALERROR-------");
-            Console.WriteLine("Component: " + component);
-            Console.WriteLine("Process: " + process);
-            Console.WriteLine("Context: " + context);
-            Console.WriteLine("Message: " + exeption.GetBaseException().Message);
-            Console.WriteLine("Stack: " + exeption.StackTrace);
-            Console.WriteLine("---------END LOG INFO-------");
-            Console.ForegroundColor = currentColor;
+            lock (_colorSync)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                LogMessage(
+                    "FATALERROR",
+                    component,
+                    process,
+                    context,
+                    GetExceptionString(exception),
+                    dateTime);
+                Console.ForegroundColor = currentColor;
+            }
             return Task.FromResult(0);
+        }
+
+        private void LogMessage(
+            string messageType,
+            string component,
+            string process,
+            string context,
+            string message,
+            DateTime? dateTime)
+        {
+            DateTime time = dateTime ?? DateTime.UtcNow;
+            Console.WriteLine($"{time.ToString("yyyy-MM-dd HH:mm:ss:fff")} [{messageType}] {component}:{process}:{context} - {message}");
+        }
+
+        private string GetExceptionString(Exception exception)
+        {
+            return exception.ToString();
         }
     }
 }
