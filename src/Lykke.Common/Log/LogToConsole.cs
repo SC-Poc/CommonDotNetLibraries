@@ -22,9 +22,9 @@ namespace Common.Log
 
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            var currentColor = Console.ForegroundColor;
             lock (_colorSync)
             {
+                var currentColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 LogMessage(
                     "WARNING",
@@ -40,9 +40,9 @@ namespace Common.Log
 
         public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            var currentColor = Console.ForegroundColor;
             lock (_colorSync)
             {
+                var currentColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
                 LogMessage(
                     "ERROR",
@@ -56,12 +56,11 @@ namespace Common.Log
             return Task.FromResult(0);
         }
 
-
         public Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            var currentColor = Console.ForegroundColor;
             lock (_colorSync)
             {
+                var currentColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
                 LogMessage(
                     "FATALERROR",
