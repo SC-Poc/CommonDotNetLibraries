@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.PlatformAbstractions;
 using Common.RemoteUi;
 
 namespace Common.Log
@@ -15,26 +16,21 @@ namespace Common.Log
     public class LogToMemory : ILog, IGuiTable
     {
         private readonly GuiTableLastData _guiTableLastData = new GuiTableLastData(50, LogUtils.GuiHeader);
+        private readonly string _component;
 
-        private void WriteRecordToMemory(string level, string component, string process,
-            string context, string type, string msg, DateTime? dateTime)
+        public GuiTableData TableData { get { return _guiTableLastData.TableData; } }
+
+        public int Count { get { return _guiTableLastData.Count; } }
+
+        public LogToMemory()
         {
-            if (dateTime == null)
-                dateTime = DateTime.UtcNow;
-            _guiTableLastData.NewData(
-                dateTime.Value.ToString(Utils.IsoDateTimeMask),
-                level,
-                component,
-                process,
-                context,
-                type,
-                msg);
+            var app = PlatformServices.Default.Application;
+            _component = $"{app.ApplicationName} {app.ApplicationVersion}";
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
             WriteRecordToMemory("info", component, process, context, string.Empty, info, dateTime);
-
             return Task.FromResult(0);
         }
 
@@ -50,21 +46,54 @@ namespace Common.Log
             return Task.FromResult(0);
         }
 
- 
         public Task WriteFatalErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
             WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
             return Task.FromResult(0);
         }
 
-	    public GuiTableData TableData { get { return _guiTableLastData.TableData; } }
-
-        public int Count { get { return _guiTableLastData.Count; } }
-
-
         public void Clear()
         {
             throw new NotImplementedException();
+        }
+
+        public Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            WriteRecordToMemory("info", _component, process, context, string.Empty, info, dateTime);
+            return Task.FromResult(0);
+        }
+
+        public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            WriteRecordToMemory("warning", _component, process, context, string.Empty, info, dateTime);
+            return Task.FromResult(0);
+        }
+
+        public Task WriteErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
+        {
+            WriteRecordToMemory("error", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return Task.FromResult(0);
+        }
+
+        public Task WriteFatalErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
+        {
+            WriteRecordToMemory("fatalerror", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return Task.FromResult(0);
+        }
+
+        private void WriteRecordToMemory(string level, string component, string process,
+            string context, string type, string msg, DateTime? dateTime)
+        {
+            if (dateTime == null)
+                dateTime = DateTime.UtcNow;
+            _guiTableLastData.NewData(
+                dateTime.Value.ToString(Utils.IsoDateTimeMask),
+                level,
+                component,
+                process,
+                context,
+                type,
+                msg);
         }
     }
 }

@@ -39,20 +39,17 @@ namespace Common.Log
             _logs.Clear();
         }
 
-        public async Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = default(DateTime?))
+        public void Stop()
         {
-            foreach (var log in _logs)
+            foreach (var stopable in _logs.OfType<IStopable>())
             {
-                await log.WriteErrorAsync(component, process, context, exception, dateTime);
+                stopable.Stop();
             }
         }
 
-        public async Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = default(DateTime?))
+        public void Dispose()
         {
-            foreach (var log in _logs)
-            {
-                await log.WriteFatalErrorAsync(component, process, context, exception, dateTime);
-            }
+            Stop();
         }
 
         public async Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = default(DateTime?))
@@ -71,17 +68,52 @@ namespace Common.Log
             }
         }
 
-        public void Stop()
+        public async Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = default(DateTime?))
         {
-            foreach (var stopable in _logs.OfType<IStopable>())
+            foreach (var log in _logs)
             {
-                stopable.Stop();
+                await log.WriteErrorAsync(component, process, context, exception, dateTime);
             }
         }
 
-        public void Dispose()
+        public async Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = default(DateTime?))
         {
-            Stop();
+            foreach (var log in _logs)
+            {
+                await log.WriteFatalErrorAsync(component, process, context, exception, dateTime);
+            }
+        }
+
+        public async Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            foreach (var log in _logs)
+            {
+                await log.WriteInfoAsync(process, context, info, dateTime);
+            }
+        }
+
+        public async Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            foreach (var log in _logs)
+            {
+                await log.WriteWarningAsync(process, context, info, dateTime);
+            }
+        }
+
+        public async Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
+        {
+            foreach (var log in _logs)
+            {
+                await log.WriteErrorAsync(process, context, exception, dateTime);
+            }
+        }
+
+        public async Task WriteFatalErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
+        {
+            foreach (var log in _logs)
+            {
+                await log.WriteFatalErrorAsync(process, context, exception, dateTime);
+            }
         }
     }
 }
