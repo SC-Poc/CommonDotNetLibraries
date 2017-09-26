@@ -22,6 +22,11 @@ namespace Common
             _log = log;
         }
 
+        protected ProducerConsumer(ILog log)
+        {
+            _log = log;
+        }
+
         private bool _started;
         private Task _threadTask;
         private TaskCompletionSource<T> _last;
@@ -67,7 +72,10 @@ namespace Common
             {
                 if (_log != null)
                 {
-                    await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
+                    if (string.IsNullOrWhiteSpace(_componentName))
+                        await _log.WriteErrorAsync("Handle", "", exception);
+                    else
+                        await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause
