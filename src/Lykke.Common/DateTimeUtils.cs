@@ -25,12 +25,13 @@ namespace Common
             }
         }
 
+        [Obsolete("Use RoundToSecond(DateTime)")]
         public static DateTime TruncMiliseconds(this DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
         }
 
-        [Obsolete("Use RoundToMinute(DateTime)")]
+        [Obsolete("Use RoundToMinute(DateTime). RoundToMinute - is not misprint, RoundSeconds rounds to the minute")]
         public static DateTime RoundSeconds(DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
@@ -113,6 +114,24 @@ namespace Common
 
         }
 
+        /// <summary>
+        /// Rounds <see cref="DateTime"/> to the seconds
+        /// </summary>
+        public static DateTime RoundToSecond(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Kind);
+        }
+
+        /// <summary>
+        /// Rounds <see cref="DateTime"/> to the <paramref name="sec"/> seconds
+        /// </summary>
+        /// <param name="dateTime"><see cref="DateTime"/> to round</param>
+        /// <param name="sec">5 - rounding to 5 seconds</param>
+        /// <returns></returns>
+        public static DateTime RoundToSecond(this DateTime dateTime, int sec)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second / sec * sec, dateTime.Kind);
+        }
 
         /// <summary>
         ///  Уменьшаем точность до минуты, отбрасывая секунды
