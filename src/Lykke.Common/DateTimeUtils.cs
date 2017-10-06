@@ -115,7 +115,7 @@ namespace Common
         }
 
         /// <summary>
-        /// Rounds <see cref="DateTime"/> to the seconds
+        /// Truncates <see cref="DateTime"/> to the seconds
         /// </summary>
         public static DateTime RoundToSecond(this DateTime dateTime)
         {
@@ -123,21 +123,24 @@ namespace Common
         }
 
         /// <summary>
-        /// Rounds <see cref="DateTime"/> to the <paramref name="sec"/> seconds
+        /// Truncates <see cref="DateTime"/> to the <paramref name="sec"/> seconds
         /// </summary>
-        /// <param name="dateTime"><see cref="DateTime"/> to round</param>
-        /// <param name="sec">5 - rounding to 5 seconds</param>
-        /// <returns></returns>
+        /// <param name="dateTime"><see cref="DateTime"/> to truncate</param>
+        /// <param name="sec">5 - truncates to 5 seconds</param>
         public static DateTime RoundToSecond(this DateTime dateTime, int sec)
         {
+            if (sec < 1)
+            {
+                throw new ArgumentException($"Should be positive number, but is {sec}", nameof(sec));
+            }
+
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second / sec * sec, dateTime.Kind);
         }
 
         /// <summary>
-        ///  Уменьшаем точность до минуты, отбрасывая секунды
+        /// Truncates <see cref="DateTime"/> to the minutes
         /// </summary>
-        /// <param name="dateTime">Исходное дата-время</param>
-        /// <returns>Округленная дата-время</returns>
+        /// <param name="dateTime"><see cref="DateTime"/> to truncate</param>
         public static DateTime RoundToMinute(this DateTime dateTime)
         {
             return new DateTime(dateTime.Year,dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
@@ -145,13 +148,17 @@ namespace Common
 
 
         /// <summary>
-        ///  Уменьшаем точность до <paramref name="min"/> минут
+        /// Truncates <see cref="DateTime"/> to the <paramref name="min"/> minutes
         /// </summary>
-        /// <param name="dateTime">Исходное дата-время</param>
-        /// <param name="min">5 - округляем до 5 минут</param>
-        /// <returns>Округленная дата-время</returns>
+        /// <param name="dateTime"><see cref="DateTime"/> to truncate</param>
+        /// <param name="min">5 - truncates to 5 minutes</param>
         public static DateTime RoundToMinute(this DateTime dateTime, int min)
         {
+            if (min < 1)
+            {
+                throw new ArgumentException($"Should be positive number, but is {min}", nameof(min));
+            }
+
             var part = dateTime.Minute / min;
 
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, part * min, 0, dateTime.Kind);
@@ -159,23 +166,26 @@ namespace Common
 
 
         /// <summary>
-        ///  Уменьшаем точность до часа - отбрасывая минуты
+        /// Truncates <see cref="DateTime"/> to the hours
         /// </summary>
-        /// <param name="dateTime">Исходное дата-время</param>
-        /// <returns>Округленная дата-время</returns>
+        /// <param name="dateTime"><see cref="DateTime"/> to truncate</param>
         public static DateTime RoundToHour(this DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, 0, 0, dateTime.Kind);
         }
 
         /// <summary>
-        /// Decreases date precision down to <paramref name="hour"/> hours
+        /// Truncates <see cref="DateTime"/> to the <paramref name="hour"/> hours
         /// </summary>
-        /// <param name="dateTime">Source date</param>
-        /// <param name="hour">Amount of hours rounding to. 5 - rounding to 5 hours</param>
-        /// <returns>Rounded date</returns>
+        /// <param name="dateTime"><see cref="DateTime"/> to truncate</param>
+        /// <param name="hour">5 - truncates to 5 hours</param>
         public static DateTime RoundToHour(this DateTime dateTime, int hour)
         {
+            if (hour < 1)
+            {
+                throw new ArgumentException($"Should be positive number, but is {hour}", nameof(hour));
+            }
+
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour / hour * hour, 0, 0, dateTime.Kind);
         }
 
