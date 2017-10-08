@@ -19,6 +19,11 @@ namespace Common.Log
             return _impl.WriteInfoAsync($"{_component}:{component}", process, context, info, dateTime);
         }
 
+        public Task WriteMonitorAsync(string component, string process, string context, string info, DateTime? dateTime = null)
+        {
+            return _impl.WriteMonitorAsync($"{_component}:{component}", process, context, info, dateTime);
+        }
+
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
             return _impl.WriteWarningAsync($"{_component}:{component}", process, context, info, dateTime);
@@ -38,6 +43,11 @@ namespace Common.Log
         public Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return _impl.WriteInfoAsync(_component, process, context, info, dateTime);
+        }
+
+        public Task WriteMonitorAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            return _impl.WriteMonitorAsync(_component, process, context, info, dateTime);
         }
 
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
