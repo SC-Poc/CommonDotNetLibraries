@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +14,8 @@ namespace Common.Log
     {
         private readonly List<ILog> _logs;
 
-        public AggregateLogger() :
-            this(Enumerable.Empty<ILog>())
+        public AggregateLogger(params ILog[] logs) :
+            this((IEnumerable<ILog>)logs)
         {
         }
 
@@ -23,7 +23,7 @@ namespace Common.Log
         {
             _logs = new List<ILog>(logs);
         }
-
+        
         public void AddLog(ILog log)
         {
             _logs.Add(log);
