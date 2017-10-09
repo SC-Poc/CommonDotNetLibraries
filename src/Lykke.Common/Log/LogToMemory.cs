@@ -30,26 +30,27 @@ namespace Common.Log
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("info", component, process, context, string.Empty, info, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("info", component, process, context, string.Empty, info, dateTime);
+        }
+
+        public Task WriteMonitorAsync(string component, string process, string context, string info, DateTime? dateTime = null)
+        {
+            return WriteRecordToMemory("monitor", component, process, context, string.Empty, info, dateTime);
         }
 
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("warning", component, process, context, string.Empty, info, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("warning", component, process, context, string.Empty, info, dateTime);
         }
 
         public Task WriteErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
         }
 
         public Task WriteFatalErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
         }
 
         public void Clear()
@@ -59,29 +60,30 @@ namespace Common.Log
 
         public Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("info", _component, process, context, string.Empty, info, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("info", _component, process, context, string.Empty, info, dateTime);
+        }
+
+        public Task WriteMonitorAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            return WriteRecordToMemory("monitor", _component, process, context, string.Empty, info, dateTime);
         }
 
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("warning", _component, process, context, string.Empty, info, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("warning", _component, process, context, string.Empty, info, dateTime);
         }
 
         public Task WriteErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("error", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("error", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
         }
 
         public Task WriteFatalErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
         {
-            WriteRecordToMemory("fatalerror", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
-            return Task.FromResult(0);
+            return WriteRecordToMemory("fatalerror", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
         }
 
-        private void WriteRecordToMemory(string level, string component, string process,
+        private Task WriteRecordToMemory(string level, string component, string process,
             string context, string type, string msg, DateTime? dateTime)
         {
             if (dateTime == null)
@@ -94,6 +96,8 @@ namespace Common.Log
                 context,
                 type,
                 msg);
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -17,74 +17,72 @@ namespace Common.Log
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            lock(_colorSync)
-                LogMessage(
-                    "INFO",
-                    component,
-                    process,
-                    context,
-                    info,
-                    dateTime);
-            return Task.FromResult(0);
+            return LogMessage(
+                ConsoleColor.Gray,
+                "INFO",
+                component,
+                process,
+                context,
+                info,
+                dateTime);
+        }
+
+        public Task WriteMonitorAsync(string component, string process, string context, string info, DateTime? dateTime = null)
+        {
+            return LogMessage(
+                ConsoleColor.White,
+                "MONITOR",
+                component,
+                process,
+                context,
+                info,
+                dateTime);
         }
 
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
-            lock (_colorSync)
-            {
-                var currentColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                LogMessage(
-                    "WARNING",
-                    component,
-                    process,
-                    context,
-                    info,
-                    dateTime);
-                Console.ForegroundColor = currentColor;
-            }
-            return Task.FromResult(0);
+            return LogMessage(
+                ConsoleColor.Yellow,
+                "WARNING",
+                component,
+                process,
+                context,
+                info,
+                dateTime);
         }
 
         public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            lock (_colorSync)
-            {
-                var currentColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                LogMessage(
-                    "ERROR",
-                    component,
-                    process,
-                    context,
-                    GetExceptionString(exception),
-                    dateTime);
-                Console.ForegroundColor = currentColor;
-            }
-            return Task.FromResult(0);
+            return LogMessage(
+                ConsoleColor.Red,
+                "ERROR",
+                component,
+                process,
+                context,
+                GetExceptionString(exception),
+                dateTime);
         }
 
         public Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            lock (_colorSync)
-            {
-                var currentColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                LogMessage(
-                    "FATALERROR",
-                    component,
-                    process,
-                    context,
-                    GetExceptionString(exception),
-                    dateTime);
-                Console.ForegroundColor = currentColor;
-            }
-            return Task.FromResult(0);
+            return LogMessage(
+                ConsoleColor.Red,
+                "FATALERROR",
+                component,
+                process,
+                context,
+                GetExceptionString(exception),
+                dateTime);
         }
 
         public Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return WriteInfoAsync(_component, process, context, info, dateTime);
+        }
+
+        public Task WriteMonitorAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            return WriteMonitorAsync(_component, process, context, info, dateTime);
         }
 
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
@@ -102,19 +100,30 @@ namespace Common.Log
             return WriteFatalErrorAsync(_component, process, context, exception, dateTime);
         }
 
-        private void LogMessage(
-            string messageType,
+        private Task LogMessage(
+            ConsoleColor color,
+            string level,
             string component,
             string process,
             string context,
             string message,
             DateTime? dateTime)
         {
-            DateTime time = dateTime ?? DateTime.UtcNow;
-            Console.WriteLine($"{time.ToString("yyyy-MM-dd HH:mm:ss:fff")} [{messageType}] {component}:{process}:{context} - {message}");
+            lock (_colorSync)
+            {
+                var oldColor = Console.ForegroundColor;
+                Console.ForegroundColor = color;
+
+                var time = dateTime ?? DateTime.UtcNow;
+                Console.WriteLine($"{time:yyyy-MM-dd HH:mm:ss:fff} [{level}] {component}:{process}:{context} - {message}");
+
+                Console.ForegroundColor = oldColor;
+            }
+
+            return Task.CompletedTask;
         }
 
-        private string GetExceptionString(Exception exception)
+        private static string GetExceptionString(Exception exception)
         {
             return exception.ToString();
         }

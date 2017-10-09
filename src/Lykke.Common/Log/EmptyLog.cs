@@ -12,6 +12,11 @@ namespace Common.Log
             return Task.CompletedTask;
         }
 
+        public Task WriteMonitorAsync(string component, string process, string context, string info, DateTime? dateTime = null)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
             return Task.CompletedTask;
@@ -28,6 +33,11 @@ namespace Common.Log
         }
 
         public Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task WriteMonitorAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return Task.CompletedTask;
         }
