@@ -4,7 +4,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Common.Log
 {
-    public class LogToConsole : ILog
+    public class LogToConsole : ILog, IConsole
     {
         private readonly string _component;
         private readonly object _colorSync = new object();
@@ -126,6 +126,11 @@ namespace Common.Log
         private static string GetExceptionString(Exception exception)
         {
             return exception.ToString();
+        }
+
+        public void WriteLine(string line)
+        {
+            Console.WriteLine(line);
         }
     }
 }
