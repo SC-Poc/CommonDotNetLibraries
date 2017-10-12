@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AsyncFriendlyStackTrace;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Common.Log
@@ -125,7 +126,7 @@ namespace Common.Log
 
         private static string GetExceptionString(Exception exception)
         {
-            return exception.ToString();
+            return exception.ToAsyncString();
         }
 
         public void WriteLine(string line)
