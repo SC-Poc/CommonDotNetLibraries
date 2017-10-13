@@ -27,6 +27,13 @@ namespace Common.Log
         /// </remarks>
         Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
+        /// Writes warning message with exception
+        /// </summary>
+        /// <remarks>
+        /// Write a warning with exception when you catch an exception but it is not the error for you, and app can still run normally
+        /// </remarks>
+        Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null);
+        /// <summary>
         /// Writes error message
         /// </summary>
         /// <remarks>
@@ -61,6 +68,13 @@ namespace Common.Log
         /// Write a warning when something went wrong without any exceptions, and app can still run normally
         /// </remarks>
         Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null);
+        /// <summary>
+        /// Writes warning message with exception
+        /// </summary>
+        /// <remarks>
+        /// Write a warning with exception when you catch an exception but it is not the error for you, and app can still run normally
+        /// </remarks>
+        Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null);
         /// <summary>
         /// Writes error message
         /// </summary>

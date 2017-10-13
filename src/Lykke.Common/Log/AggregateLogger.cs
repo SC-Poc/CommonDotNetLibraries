@@ -61,6 +61,9 @@ namespace Common.Log
         public Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = default(DateTime?))
             => Task.WhenAll(_logs.Select(l => l.WriteWarningAsync(component, process, context, info, dateTime)));
 
+        public Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null)
+            => Task.WhenAll(_logs.Select(l => l.WriteWarningAsync(component, process, context, info, ex, dateTime)));
+
         public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = default(DateTime?))
             => Task.WhenAll(_logs.Select(l => l.WriteErrorAsync(component, process, context, exception, dateTime)));
 
@@ -75,6 +78,9 @@ namespace Common.Log
 
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
             => Task.WhenAll(_logs.Select(l => l.WriteWarningAsync(process, context, info, dateTime)));
+
+        public Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null)
+            => Task.WhenAll(_logs.Select(l => l.WriteWarningAsync(process, context, info, ex, dateTime)));
 
         public Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
             => Task.WhenAll(_logs.Select(l => l.WriteErrorAsync(process, context, exception, dateTime)));
