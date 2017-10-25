@@ -9,7 +9,7 @@ namespace Common
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
     {
         protected readonly string _componentName;
-        private readonly ILog _log;
+        protected readonly ILog _log;
         private readonly object _startStopLockobject = new object();
 
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
