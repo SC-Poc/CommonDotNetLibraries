@@ -16,25 +16,26 @@ namespace Common
     {
         private readonly string _componentName;
         private readonly int _periodMs;
-        private ILog _log;
+
+        protected ILog Log { get; private set; }
 
         protected TimerPeriod(string componentName, int periodMs, ILog log = null)
         {
             _componentName = componentName;
 
             _periodMs = periodMs;
-            _log = log;
+            Log = log;
         }
 
         protected TimerPeriod(int periodMs, ILog log = null)
         {
             _periodMs = periodMs;
-            _log = log;
+            Log = log;
         }
 
         protected void SetLogger(ILog log)
         {
-            _log = log;
+            Log = log;
         }
 
         public bool Working { get; private set; }
@@ -46,9 +47,9 @@ namespace Common
             try
             {
                 if (string.IsNullOrWhiteSpace(_componentName))
-                    await _log.WriteFatalErrorAsync("Loop", "", exception);
+                    await Log.WriteFatalErrorAsync("Loop", "", exception);
                 else
-                    await _log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
+                    await Log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch
@@ -97,7 +98,7 @@ namespace Common
 
         public virtual void Start()
         {
-            if (_log == null)
+            if (Log == null)
                 throw new Exception(
                     "Logger has to be inited" + (string.IsNullOrWhiteSpace(_componentName) ? "" : $" for: {_componentName}"));
 

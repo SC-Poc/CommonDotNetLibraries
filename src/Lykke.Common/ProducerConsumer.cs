@@ -9,22 +9,23 @@ namespace Common
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
     {
         protected readonly string _componentName;
-        private readonly ILog _log;
         private readonly object _startStopLockobject = new object();
 
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
+
+        protected ILog Log { get; }
 
         protected abstract Task Consume(T item);
 
         protected ProducerConsumer(string componentName, ILog log)
         {
             _componentName = componentName;
-            _log = log;
+            Log = log;
         }
 
         protected ProducerConsumer(ILog log)
         {
-            _log = log;
+            Log = log;
         }
 
         private bool _started;
@@ -70,12 +71,12 @@ namespace Common
         {
             try
             {
-                if (_log != null)
+                if (Log != null)
                 {
                     if (string.IsNullOrWhiteSpace(_componentName))
-                        await _log.WriteErrorAsync("Handle", "", exception);
+                        await Log.WriteErrorAsync("Handle", "", exception);
                     else
-                        await _log.WriteErrorAsync(_componentName, "Handle", "", exception);
+                        await Log.WriteErrorAsync(_componentName, "Handle", "", exception);
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause
