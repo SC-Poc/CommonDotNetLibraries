@@ -52,6 +52,18 @@ namespace Common.Log
                 dateTime);
         }
 
+        public Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return LogMessage(
+                ConsoleColor.Yellow,
+                "WARNING",
+                component,
+                process,
+                context,
+                $"{info}: {GetExceptionString(ex)}",
+                dateTime);
+        }
+
         public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             return LogMessage(
@@ -89,6 +101,11 @@ namespace Common.Log
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return WriteWarningAsync(_component, process, context, info, dateTime);
+        }
+
+        public Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return WriteWarningAsync(_component, process, context, info, ex, dateTime);
         }
 
         public Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)

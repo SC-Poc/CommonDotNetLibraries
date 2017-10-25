@@ -43,6 +43,12 @@ namespace Common.Log
             return WriteRecordToMemory("warning", component, process, context, string.Empty, info, dateTime);
         }
 
+        public Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return WriteRecordToMemory("warning", component, process, context, ex.GetType().ToString(), $"{info}: {ex.GetBaseException().Message}", dateTime);
+
+        }
+
         public Task WriteErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
         {
             return WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
@@ -71,6 +77,11 @@ namespace Common.Log
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return WriteRecordToMemory("warning", _component, process, context, string.Empty, info, dateTime);
+        }
+
+        public Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return WriteRecordToMemory("warning", _component, process, context, ex.GetType().ToString(), $"{info}: {ex.GetBaseException().Message}", dateTime);
         }
 
         public Task WriteErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)

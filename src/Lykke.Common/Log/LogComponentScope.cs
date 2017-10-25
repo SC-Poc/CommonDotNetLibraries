@@ -29,6 +29,11 @@ namespace Common.Log
             return _impl.WriteWarningAsync($"{_component}:{component}", process, context, info, dateTime);
         }
 
+        public Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return _impl.WriteWarningAsync($"{_component}:{component}", process, context, info, ex, dateTime);
+        }
+
         public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             return _impl.WriteErrorAsync($"{_component}:{component}", process, context, exception, dateTime);
@@ -53,6 +58,11 @@ namespace Common.Log
         public Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null)
         {
             return _impl.WriteWarningAsync(_component, process, context, info, dateTime);
+        }
+
+        public Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null)
+        {
+            return _impl.WriteWarningAsync(process, context, info, ex, dateTime);
         }
 
         public Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
