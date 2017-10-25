@@ -13,7 +13,7 @@ namespace Common
 
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
 
-        protected ILog Log { get; private set; }
+        protected ILog Log { get; }
 
         protected abstract Task Consume(T item);
 
