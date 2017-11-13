@@ -929,7 +929,12 @@ namespace Common
 
         public static string GetFixedAsString(this double value, int accuracy)
         {
-            return value.ToString("0." + new string('#', accuracy));
+            return value.ToString("0." + new string('0', accuracy), CultureInfo.InvariantCulture);
+        }
+
+        public static string GetFixedAsString(this decimal value, int accuracy)
+        {
+            return value.ToString("0." + new string('0', accuracy), CultureInfo.InvariantCulture);
         }
 
         public static double TruncateDecimalPlaces(this double value, int places, bool toUpper = false)
