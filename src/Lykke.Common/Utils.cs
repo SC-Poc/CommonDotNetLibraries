@@ -927,9 +927,28 @@ namespace Common
             await log.WriteErrorAsync(component, process, new string(bodyPart), ex);
         }
 
+        /// <summary>
+        /// Formating float as string with fixed accuracy and '.' as separate
+        /// </summary>
+        /// <param name="value">float value</param>
+        /// <param name="accuracy">accuracy for value</param>
+        /// <returns></returns>
         public static string GetFixedAsString(this double value, int accuracy)
         {
-            return value.ToString("0." + new string('#', accuracy));
+            var format = string.Format("0.{0}", new string('0', accuracy));
+            return value.ToString(format, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Formating float as string with fixed accuracy and '.' as separate
+        /// </summary>
+        /// <param name="value">float value</param>
+        /// <param name="accuracy">accuracy for value</param>
+        /// <returns></returns>
+        public static string GetFixedAsString(this decimal value, int accuracy)
+        {
+            var format = string.Format("0.{0}", new string('0', accuracy));
+            return value.ToString(format, CultureInfo.InvariantCulture);
         }
 
         public static double TruncateDecimalPlaces(this double value, int places, bool toUpper = false)
