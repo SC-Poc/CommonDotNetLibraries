@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using PhoneNumbers;
@@ -461,6 +462,28 @@ namespace Common
         public static bool IsHexString(this string test)
         {
             return Regex.IsMatch(test, @"\A\b[0-9a-fA-F]+\b\Z");
+        }
+
+        public static string SanitizeEmail(this string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return string.Empty;
+
+            var hash = SHA256.Create().ComputeHash(email.ToUtf8Bytes());
+            return hash.ToHexString().ToLower();
+        }
+        
+        public static string SanitizePhone(string phone)
+        {
+            const int sanitizeCount = 5;
+
+            if (string.IsNullOrEmpty(phone))
+                return string.Empty;
+
+            if (phone.Length < sanitizeCount)
+                return new string('*', sanitizeCount);
+
+            return $"*****{phone.Substring(sanitizeCount)}";
         }
     }
 
