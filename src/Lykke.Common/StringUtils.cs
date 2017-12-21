@@ -477,13 +477,11 @@ namespace Common
         {
             const int sanitizeCount = 5;
 
-            if (string.IsNullOrEmpty(phone))
-                return string.Empty;
+            int length = phone.Length;
 
-            if (phone.Length < sanitizeCount)
-                return new string('*', sanitizeCount);
-
-            return $"*****{phone.Substring(sanitizeCount)}";
+            return length > sanitizeCount 
+                ? phone.Substring(0, sanitizeCount).PadRight(length, '*') 
+                : phone;
         }
     }
 
