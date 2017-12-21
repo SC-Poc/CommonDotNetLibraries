@@ -473,7 +473,7 @@ namespace Common
             return hash.ToHexString().ToLower();
         }
         
-        public static string SanitizePhone(string phone)
+        public static string SanitizePhone(this string phone)
         {
             const int sanitizeCount = 5;
 
