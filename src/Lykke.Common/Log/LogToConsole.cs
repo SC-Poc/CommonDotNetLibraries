@@ -7,9 +7,10 @@ namespace Common.Log
 {
     public class LogToConsole : ILog, IConsole
     {
-        private readonly string _component;
-        private readonly object _colorSync = new object();
+        private static readonly object ColorSync = new object();
 
+        private readonly string _component;
+        
         public LogToConsole()
         {
             var app = PlatformServices.Default.Application;
@@ -127,7 +128,7 @@ namespace Common.Log
             string message,
             DateTime? dateTime)
         {
-            lock (_colorSync)
+            lock (ColorSync)
             {
                 var oldColor = Console.ForegroundColor;
                 Console.ForegroundColor = color;
