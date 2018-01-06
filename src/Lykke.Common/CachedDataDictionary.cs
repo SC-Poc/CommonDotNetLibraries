@@ -15,7 +15,7 @@ namespace Common
         private readonly Func<Task<Dictionary<TKey, TValue>>> _getData;
         private readonly TimeSpan _expirationPeriod;
         private readonly CachedDataDictionaryUpdateStrategy _updateStrategy;
-        private readonly AutoResetEvent _updateSync;
+        private readonly SemaphoreSlim _updateSync;
         
         public CachedDataDictionary(
             Func<Task<Dictionary<TKey, TValue>>> getData, 
@@ -35,7 +35,7 @@ namespace Common
             _expirationPeriod = expirationPeriod;
             _updateStrategy = updateStrategy;
 
-            _updateSync = new AutoResetEvent(true);
+            _updateSync = new SemaphoreSlim(1);
         }
 
         public bool HaveToRefreshCash()
@@ -103,7 +103,7 @@ namespace Common
             // Double check lock
             if (HaveToRefreshCash(now))
             {
-                _updateSync.WaitOne();
+                await _updateSync.WaitAsync();
 
                 try
                 {
@@ -116,19 +116,19 @@ namespace Common
                 }
                 finally
                 {
-                    _updateSync.Set();
+                    _updateSync.Release();
                 }
             }
 
             return _cashe;
         }
 
-        private bool HaveToRefreshCash(DateTime now)
+        private bool HaveToRefreshCash(DateTime atTheMoment)
         {
             if (_cashe == null)
                 return true;
 
-            return now - _lastRefreshDateTime > _expirationPeriod;
+            return atTheMoment - _lastRefreshDateTime > _expirationPeriod;
         }
     }
 }
