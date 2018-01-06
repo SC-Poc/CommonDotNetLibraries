@@ -35,7 +35,7 @@ namespace Common
             _expirationPeriod = expirationPeriod;
             _updateStrategy = updateStrategy;
 
-            _updateSync = new SemaphoreSlim(1);
+            _updateSync = new SemaphoreSlim(1, 1);
         }
 
         public bool HaveToRefreshCash()
