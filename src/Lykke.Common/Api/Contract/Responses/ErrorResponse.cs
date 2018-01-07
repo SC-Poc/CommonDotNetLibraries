@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -89,6 +90,41 @@ namespace Lykke.Common.Api.Contract.Responses
 
                 sb.Append(" -> ");
             }
+        }
+
+        public string GetSummaryMessage()
+        {
+            var sb = new StringBuilder();
+
+            if (ErrorMessage != null)
+            {
+                sb.AppendLine($"Error summary: {ErrorMessage}");
+            }
+
+            if (ModelErrors != null)
+            {
+                sb.AppendLine();
+
+                foreach (var error in ModelErrors)
+                {
+                    if (error.Key != null && error.Value != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(error.Key))
+                        {
+                            sb.AppendLine($"{error.Key}:");
+                        }
+
+                        foreach (var message in error.Value.Take(error.Value.Count - 1))
+                        {
+                            sb.AppendLine($" - {message}");
+                        }
+
+                        sb.Append($" - {error.Value.Last()}");
+                    }
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
