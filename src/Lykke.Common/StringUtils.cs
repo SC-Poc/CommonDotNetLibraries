@@ -4,12 +4,118 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using PhoneNumbers;
 
 namespace Common
 {
+    [PublicAPI]
     public static class StringUtils
     {
+        /// <summary>
+        /// Calculates string 64 bit hash
+        /// </summary>
+        public static long CalculateHash64(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var hashedValue = 3074457345618258791ul;
+
+            foreach (var c in value)
+            {
+                unchecked
+                {
+                    hashedValue += c;
+                    hashedValue *= 3074457345618258799ul;
+                }
+            }
+
+            unchecked
+            {
+                return (long) hashedValue;
+            }
+        }
+
+        /// <summary>
+        /// Calculates string 32 bit hash
+        /// </summary>
+        public static int CalculateHash32(this string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            var hashedValue = 618258799u;
+
+            foreach (var c in value)
+            {
+                unchecked
+                {
+                    hashedValue += c;
+                    hashedValue *= 618258799u;
+                }
+            }
+
+            unchecked
+            {
+                return (int)hashedValue;
+            }
+        }
+
+        /// <summary>
+        /// Calculates string hash as hex string of the given <paramref name="length"/> up to 16 digits
+        /// Default <paramref name="length"/> is 16
+        /// </summary>
+        public static string CalculateHexHash64(this string value, int length = 16)
+        {
+            if (length < 1 || length > 16)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Length should be in the range [1..16]");
+            }
+
+            ulong mask = 0xFul;
+
+            for (var i = 1; i < length; ++i)
+            {
+                // One hex digit - 4 bits, so multiplies i by 4
+                mask |= 0xFul << (i * 4);
+            }
+
+            unchecked
+            {
+                return ((ulong) CalculateHash64(value) & mask).ToString($"X{length}");
+            }
+        }
+
+        /// <summary>
+        /// Calculates string hash as hex string of the given <paramref name="length"/> up to 8 digits.
+        /// Default <paramref name="length"/> is 8
+        /// </summary>
+        public static string CalculateHexHash32(this string value, int length = 8)
+        {
+            if (length < 1 || length > 8)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Length should be in the range [1..8]");
+            }
+
+            ulong mask = 0xFu;
+
+            for (var i = 1; i < length; ++i)
+            {
+                // One hex digit - 4 bits, so multiplies i by 4
+                mask |= 0xFu << (i * 4);
+            }
+
+            unchecked
+            {
+                return ((uint)CalculateHash32(value) & mask).ToString($"X{length}");
+            }
+        }
+
         /// <summary>
         /// Проверить на валидность строки Email
         /// </summary>
