@@ -22,15 +22,14 @@ namespace Common
                 throw new ArgumentNullException(nameof(value));
             }
 
-            const ulong salt = 3074457345618258791ul;
-            var hashedValue = salt;
+            var hashedValue = 3074457345618258791ul;
 
             foreach (var c in value)
             {
                 unchecked
                 {
                     hashedValue += c;
-                    hashedValue *= salt;
+                    hashedValue *= 3074457345618258799ul;
                 }
             }
 
@@ -50,15 +49,14 @@ namespace Common
                 throw new ArgumentNullException(nameof(value));
             }
 
-            const uint salt = 618258799u;
-            var hashedValue = salt;
+            var hashedValue = 618258791u;
 
             foreach (var c in value)
             {
                 unchecked
                 {
                     hashedValue += c;
-                    hashedValue *= salt;
+                    hashedValue *= 618258799u;
                 }
             }
 
@@ -79,7 +77,7 @@ namespace Common
                 throw new ArgumentOutOfRangeException(nameof(length), length, "Length should be in the range [1..16]");
             }
 
-            ulong mask = 0xF;
+            ulong mask = 0xFul;
 
             for (var i = 1; i < length; ++i)
             {

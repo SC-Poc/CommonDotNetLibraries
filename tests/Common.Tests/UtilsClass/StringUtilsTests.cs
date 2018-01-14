@@ -44,7 +44,7 @@ namespace Common.Tests.UtilsClass
         public void Test_that_hash32_can_be_persisted()
         {
             const string str = "Lorem Ipsum is simply dummy text of the printing and typesetting industry";
-            const int persistedHash = 1778674507;
+            const int persistedHash = 1749566419;
 
             var hash = str.CalculateHash32();
 
@@ -77,8 +77,8 @@ namespace Common.Tests.UtilsClass
             var hash8 = str.CalculateHexHash32(8);
             Assert.Throws<ArgumentOutOfRangeException>(() => str.CalculateHexHash32(9));
 
-            Assert.Equal("B", hash1);
-            Assert.Equal("6A046B4B", hash8);
+            Assert.Equal("3", hash1);
+            Assert.Equal("684843D3", hash8);
         }
     }
 }
