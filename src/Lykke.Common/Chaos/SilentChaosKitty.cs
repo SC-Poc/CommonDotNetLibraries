@@ -6,7 +6,7 @@
     public class SilentChaosKitty : IChaosKitty
     {
         /// <inheritdoc />
-        public void Meow(object tag)
+        public void Meow(object tag, int lineNumber = 0)
         {
         }
     }

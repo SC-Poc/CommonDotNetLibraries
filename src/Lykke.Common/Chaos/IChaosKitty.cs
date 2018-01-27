@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace Lykke.Common.Chaos
 {
@@ -21,19 +22,22 @@ namespace Lykke.Common.Chaos
     /// </summary>
     [PublicAPI]
     public interface IChaosKitty
-    {      
+    {
         /// <summary>
         /// Let the kitty think to do meow or not this time.
         /// </summary>
         /// <param name="tag">
-        /// An object that will be converted to the string by the <see cref="object.ToString"/> call and will be 
-        /// passed to the message of the generated exception, if kitty is meowed. Passing ID of the executed
-        /// process, or another context, will be good idea, to reconstruct the state of the application by the logs,
-        /// when the "meow" is lead to the inconsistent state of the app and you searching how to fix this issue.
+        ///     An object that will be converted to the string by the <see cref="object.ToString"/> call and will be 
+        ///     passed to the message of the generated exception, if kitty is meowed. Passing ID of the executed
+        ///     process, or another context, will be good idea, to reconstruct the state of the application by the logs,
+        ///     when the "meow" is lead to the inconsistent state of the app and you searching how to fix this issue.
+        /// </param>
+        /// <param name="lineNumber">
+        /// Line number, where <see cref="Meow"/> was called. Will be substituted automatically
         /// </param>
         /// <exception cref="ChaosException">
         /// If the kitty is meowed, then this exception will be thrown
         /// </exception>
-        void Meow(object tag);
+        void Meow(object tag, [CallerLineNumber] int lineNumber = 0);
     }
 }
