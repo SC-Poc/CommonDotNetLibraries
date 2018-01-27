@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace Lykke.Common.Chaos
@@ -23,7 +24,7 @@ namespace Lykke.Common.Chaos
         }
 
         /// <inheritdoc />
-        public void Meow(object tag)
+        public void Meow(object tag, [CallerLineNumber] int lineNumber = 0)
         {
             if (_stateOfChaos < 1e-10)
             {
@@ -32,7 +33,7 @@ namespace Lykke.Common.Chaos
 
             if (_randmom.NextDouble() < _stateOfChaos)
             {
-                throw new ChaosException($"Meow: {tag}");
+                throw new ChaosException($"Meow: {tag} at line {lineNumber}");
             }
         }
     }
