@@ -144,7 +144,7 @@ namespace Common.Log
 
         private static string GetExceptionString(Exception exception)
         {
-            return exception.ToAsyncString();
+            return exception?.ToAsyncString();
         }
 
         public void WriteLine(string line)
