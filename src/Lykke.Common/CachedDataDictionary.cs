@@ -38,6 +38,11 @@ namespace Common
             _updateSync = new SemaphoreSlim(1, 1);
         }
 
+        public void Invalidate()
+        {
+            _cashe = null;
+        }
+
         public bool HaveToRefreshCash()
         {
             return HaveToRefreshCash(DateTime.UtcNow);
