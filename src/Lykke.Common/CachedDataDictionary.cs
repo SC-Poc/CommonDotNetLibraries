@@ -40,7 +40,7 @@ namespace Common
 
         public void Invalidate()
         {
-            _lastRefreshDateTime = DateTime.MinValue;
+            _cashe = null;
         }
 
         public bool HaveToRefreshCash()
