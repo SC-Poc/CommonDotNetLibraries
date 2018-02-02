@@ -68,7 +68,7 @@ namespace Common.Log
         {
             log.WriteWarningAsync(process, GetContextString(context), info, ex, dateTime).GetAwaiter().GetResult();
         }
-        
+
         /// <summary>
         /// Writes error message
         /// </summary>
@@ -76,9 +76,9 @@ namespace Common.Log
         /// Write a error when exception was thrown, but app can still run.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
-        public static void WriteError(this ILog log, string process, object context, Exception exception, DateTime? dateTime = null)
+        public static void WriteError(this ILog log, string process, object context, [CanBeNull] Exception exception = null, DateTime? dateTime = null)
         {
-            log.WriteErrorAsync(process, GetContextString(context), exception, dateTime).GetAwaiter().GetResult();    
+            log.WriteErrorAsync(process, GetContextString(context), exception, dateTime).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Common.Log
         /// Write a fatal error when exception was thrown and app can't still run anymore.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
-        public static void WriteFatalError(this ILog log, string process, object context, Exception exception, DateTime? dateTime = null)
+        public static void WriteFatalError(this ILog log, string process, object context, [CanBeNull] Exception exception = null, DateTime? dateTime = null)
         {
             log.WriteFatalErrorAsync(process, GetContextString(context), exception, dateTime).GetAwaiter().GetResult();
         }
