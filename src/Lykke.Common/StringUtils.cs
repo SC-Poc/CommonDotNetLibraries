@@ -127,6 +127,10 @@ namespace Common
                 return false;
 
             email = email.Trim();
+            
+            //according to https://tools.ietf.org/html/rfc5321#section-4.5.3.1.3: 256 - 2 punctuation chars (< and >)
+            if (email.Length > 254)
+                return false;
 
             var lines = email.Split('@');
 
