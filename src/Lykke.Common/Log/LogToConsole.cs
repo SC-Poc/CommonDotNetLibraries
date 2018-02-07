@@ -149,7 +149,7 @@ namespace Common.Log
 
         public void WriteLine(string line)
         {
-            Console.WriteLine(line);
+            Console.WriteLine($"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss:fff} {line}");
         }
     }
 }
