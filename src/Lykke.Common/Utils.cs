@@ -602,6 +602,25 @@ namespace Common
             }
         }
 
+        public static decimal ParseAnyDecimal(this string amount)
+        {
+            amount = amount.Replace(',', '.');
+            return Decimal.Parse(amount, CultureInfo.InvariantCulture);
+        }
+
+        public static decimal ParseAnyDecimalOrDefault(this string amount, decimal defaultValue)
+        {
+            try
+            {
+                amount = amount.Replace(',', '.');
+                return Decimal.Parse(amount, CultureInfo.InvariantCulture);
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
         public static int ParseIntOrDefault(this string amount, int defaultValue)
         {
             try
