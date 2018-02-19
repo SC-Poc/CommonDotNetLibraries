@@ -591,15 +591,8 @@ namespace Common
 
         public static double ParseAnyDoubleOrDefault(this string amount, double defaultValue)
         {
-            try
-            {
-                amount = amount.Replace(',', '.');
-                return Double.Parse(amount, CultureInfo.InvariantCulture);
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
+            amount = amount.Replace(',', '.');
+            return Double.TryParse(amount, out double result) ? result : defaultValue;
         }
 
         public static decimal ParseAnyDecimal(this string amount)
@@ -610,15 +603,8 @@ namespace Common
 
         public static decimal ParseAnyDecimalOrDefault(this string amount, decimal defaultValue)
         {
-            try
-            {
-                amount = amount.Replace(',', '.');
-                return Decimal.Parse(amount, CultureInfo.InvariantCulture);
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
+            amount = amount.Replace(',', '.');
+            return Decimal.TryParse(amount, out decimal result) ? result : defaultValue;
         }
 
         public static int ParseIntOrDefault(this string amount, int defaultValue)
