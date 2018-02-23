@@ -594,14 +594,14 @@ namespace Common
                 : phone;
         }
         
-        public static bool IsValidRowKey(this string src)
+        public static bool IsValidPartitionOrRowKey(this string src)
         {
             return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]+");
         }
         
         public static bool IsValidEmailAndRowKey(this string src)
         {
-            return src.IsValidEmail() && src.IsValidRowKey();
+            return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
         }
     }
 
