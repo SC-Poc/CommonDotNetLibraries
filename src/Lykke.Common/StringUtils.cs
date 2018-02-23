@@ -596,7 +596,7 @@ namespace Common
         
         public static bool IsValidPartitionOrRowKey(this string src)
         {
-            return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]+");
+            return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]");
         }
         
         public static bool IsValidEmailAndRowKey(this string src)
