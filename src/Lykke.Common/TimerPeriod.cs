@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.PlatformAbstractions;
 using Autofac;
 using Common.Log;
 
@@ -35,6 +36,7 @@ namespace Common
         {
             _periodMs = periodMs;
             Log = log;
+            _componentName = PlatformServices.Default.Application.ApplicationName;
         }
 
         protected void SetLogger(ILog log)
