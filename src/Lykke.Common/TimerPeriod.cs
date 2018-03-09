@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.PlatformAbstractions;
 using Autofac;
 using Common.Log;
 
@@ -14,6 +17,8 @@ namespace Common
     // Таймер, который исполняет метод Execute через определенный интервал после окончания исполнения метода Execute
     public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
     {
+        private static readonly TelemetryClient _telemetryClient = new TelemetryClient();
+
         private readonly string _componentName;
         private readonly int _periodMs;
 
@@ -31,6 +36,7 @@ namespace Common
         {
             _periodMs = periodMs;
             Log = log;
+            _componentName = PlatformServices.Default.Application.ApplicationName;
         }
 
         protected void SetLogger(ILog log)
@@ -71,6 +77,7 @@ namespace Common
             {
                 try
                 {
+                    var telemtryOperation = _telemetryClient.StartOperation<RequestTelemetry>($"{nameof(TimerPeriod)} for {_componentName}");
                     try
                     {
                         await Execute(cancellation);
@@ -78,6 +85,12 @@ namespace Common
                     catch (Exception exception)
                     {
                         await LogFatalErrorAsync(exception);
+                        telemtryOperation.Telemetry.Success = false;
+                        _telemetryClient.TrackException(exception);
+                    }
+                    finally
+                    {
+                        _telemetryClient.StopOperation(telemtryOperation);
                     }
 
                     try
