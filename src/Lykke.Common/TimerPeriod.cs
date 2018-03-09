@@ -75,7 +75,7 @@ namespace Common
             {
                 try
                 {
-                    var telemtryOperation = _telemetryClient.StartOperation<RequestTelemetry>(nameof(TimerPeriod));
+                    var telemtryOperation = _telemetryClient.StartOperation<RequestTelemetry>($"{nameof(TimerPeriod)} for {_componentName}");
                     try
                     {
                         await Execute(cancellation);
