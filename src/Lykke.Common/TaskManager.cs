@@ -30,7 +30,7 @@ namespace Common
             }
 
             var task = new TaskCompletionSource<TResult>(key);
-            if (_tasks.TryAdd(key, task) && !cancellationToken.IsCancellationRequested)
+            if (_tasks.TryAdd(key, task))
             {
                 cancellationToken.Register(() => Cancel(key, cancellationToken));
             }
@@ -56,13 +56,6 @@ namespace Common
             }
         }
 
-        private IEnumerable<TaskCompletionSource<TResult>> GetAndDeleteAll()
-        {
-            var result = _tasks.Values.ToArray();
-            _tasks.Clear();
-            return result;
-
-        }
 
         /// <summary>
         /// Attempts to transition the task into the <see cref="F:System.Threading.Tasks.TaskStatus.Canceled"></see> state.
@@ -88,8 +81,7 @@ namespace Common
         /// <param name="cancellationToken">An optional cancellation token</param>
         public void CancelAll(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var keys = _tasks.Keys.ToArray();
-            foreach (var key in keys)
+            foreach (var key in _tasks.Keys)
             {
                 Cancel(key, cancellationToken);
             }
@@ -106,11 +98,12 @@ namespace Common
                 throw new ArgumentNullException(nameof(exception));
             }
 
-            var tasks = GetAndDeleteAll();
-
-            foreach (var taskCompletionSource in tasks)
+            foreach (var key in _tasks.Keys)
             {
-                taskCompletionSource.TrySetException(exception);
+                if (_tasks.TryRemove(key, out var task))
+                {
+                    task.TrySetException(exception);
+                }
             }
         }
     }
