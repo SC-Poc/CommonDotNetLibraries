@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace Lykke.Common.Chaos
 {
     /// <summary>
-    /// Autofcat <see cref="ContainerBuilder"/> extensions for the <see cref="ChaosKitty"/>
+    /// Autofac <see cref="ContainerBuilder"/> extensions for the <see cref="ChaosKitty"/>
     /// </summary>
     [PublicAPI]
     public static class ContainerBuilderExtensions
