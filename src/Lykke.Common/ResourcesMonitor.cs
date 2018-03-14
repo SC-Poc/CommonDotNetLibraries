@@ -16,9 +16,11 @@ namespace Lykke.Common
         /// Registers <see cref="ResourcesMonitor"/> singleton with ApplicationInsights telemetry submission only"/>
         /// </summary>
         /// <param name="builder">The DI container builder</param>
-        public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder)
+        /// <param name="log">ILog logger</param>
+        public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder, ILog log)
         {
-            builder.RegisterType<ResourcesMonitor>()
+            var monitor = new ResourcesMonitor(log);
+            builder.RegisterInstance(monitor)
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
@@ -28,16 +30,16 @@ namespace Lykke.Common
         /// Registers <see cref="ResourcesMonitor"/> singleton that beside ApplicationInsights telemetry submission also logs threshold crossing events on monitor level"/>
         /// </summary>
         /// <param name="builder">The DI container builder</param>
+        /// <param name="log">ILog logger</param>
         /// <param name="cpuThreshold">Optional CPU threshold for monitor logging</param>
         /// <param name="ramMbThreshold">Optional RAM threshold for monitor logging</param>
-        public static void RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, double? cpuThreshold, int? ramMbThreshold)
+        public static void RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, ILog log, double? cpuThreshold, int? ramMbThreshold)
         {
-            builder.RegisterType<ResourcesMonitor>()
+            var monitor = new ResourcesMonitor(log, cpuThreshold, ramMbThreshold);
+            builder.RegisterInstance(monitor)
                 .As<IStartable>()
                 .AutoActivate()
-                .SingleInstance()
-                .WithParameter(TypedParameter.From(cpuThreshold))
-                .WithParameter(TypedParameter.From(ramMbThreshold));
+                .SingleInstance();
         }
     }
 
@@ -98,13 +100,13 @@ namespace Lykke.Common
             ApplicationInsightsTelemetry.TrackMetric(_cpuMetric, cpuPercentage);
 
             if (_cpuThreshold.HasValue && _cpuThreshold.Value <= cpuPercentage)
-                _log.WriteMonitor(nameof(ResourcesMonitor), "", $"CPU usage is {cpuPercentage}");
+                _log.WriteMonitor(nameof(ResourcesMonitor), "", $"CPU usage is {cpuPercentage:0.##}");
 
             double memoryInMBytes = _process.WorkingSet64 / _1mb;
             ApplicationInsightsTelemetry.TrackMetric(_ramMetric, memoryInMBytes);
 
             if (_ramMbThreshold.HasValue && _ramMbThreshold.Value <= memoryInMBytes)
-                _log.WriteMonitor(nameof(ResourcesMonitor), "", $"RAM usage is {memoryInMBytes}");
+                _log.WriteMonitor(nameof(ResourcesMonitor), "", $"RAM usage is {memoryInMBytes:0.##}");
 
             return Task.CompletedTask;
         }
