@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Extensions.PlatformAbstractions;
 using Autofac;
 using Common.Log;
@@ -14,11 +12,11 @@ namespace Common
         Task Execute();
     }
 
-    // Таймер, который исполняет метод Execute через определенный интервал после окончания исполнения метода Execute
+    /// <summary>
+    /// Timer that runs Execute method in a loop with a fixed time interval between runs.
+    /// </summary>
     public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
     {
-        private static readonly TelemetryClient _telemetryClient = new TelemetryClient();
-
         private readonly string _componentName;
         private readonly int _periodMs;
 
@@ -77,7 +75,7 @@ namespace Common
             {
                 try
                 {
-                    var telemtryOperation = _telemetryClient.StartOperation<RequestTelemetry>($"{nameof(TimerPeriod)} for {_componentName}");
+                    var telemtryOperation = TelemetryHelper.StartRequestOperation($"{nameof(TimerPeriod)} for {_componentName}");
                     try
                     {
                         await Execute(cancellation);
@@ -85,12 +83,12 @@ namespace Common
                     catch (Exception exception)
                     {
                         await LogFatalErrorAsync(exception);
-                        telemtryOperation.Telemetry.Success = false;
-                        _telemetryClient.TrackException(exception);
+                        TelemetryHelper.MarkFailedOperation(telemtryOperation);
+                        TelemetryHelper.TrackException(exception);
                     }
                     finally
                     {
-                        _telemetryClient.StopOperation(telemtryOperation);
+                        TelemetryHelper.StopOperation(telemtryOperation);
                     }
 
                     try
