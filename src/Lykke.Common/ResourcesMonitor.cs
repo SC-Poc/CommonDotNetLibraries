@@ -44,7 +44,7 @@ namespace Lykke.Common
     /// <summary>
     /// CPU and RAM monitoring background checker based on TimerPeriod with once per minute frequency
     /// </summary>
-    public sealed class ResourcesMonitor : TimerPeriod
+    internal sealed class ResourcesMonitor : TimerPeriod
     {
         private const double _1mb = 1024 * 1024;
         private const string _cpuMetric = "Custom CPU";
@@ -61,7 +61,7 @@ namespace Lykke.Common
         /// Inits monitoring with ApplicationInsights telemetry submission only.
         /// </summary>
         /// <param name="log">ILog implementation</param>
-        public ResourcesMonitor(ILog log)
+        internal ResourcesMonitor(ILog log)
             : base((int)TimeSpan.FromMinutes(1).TotalMilliseconds, log)
         {
             _startCpuTime = _process.TotalProcessorTime;
@@ -74,12 +74,19 @@ namespace Lykke.Common
         /// <param name="log">ILog implementation</param>
         /// <param name="cpuThreshold">Optional CPU threshold for monitor logging</param>
         /// <param name="ramMbThreshold">Optional RAM threshold for monitor logging</param>
-        public ResourcesMonitor(ILog log, double? cpuThreshold, int? ramMbThreshold)
+        internal ResourcesMonitor(ILog log, double? cpuThreshold, int? ramMbThreshold)
             : base((int)TimeSpan.FromMinutes(1).TotalMilliseconds, log)
         {
             _log = log ?? throw new ArgumentNullException(nameof(log));
+
+            if (cpuThreshold.HasValue && cpuThreshold.Value < 0)
+                throw new ArgumentException($"Parameter {nameof(cpuThreshold)} must have non negative value!");
             _cpuThreshold = cpuThreshold;
+
+            if (ramMbThreshold.HasValue && ramMbThreshold.Value < 0)
+                throw new ArgumentException($"Parameter {nameof(ramMbThreshold)} must have non negative value!");
             _ramMbThreshold = ramMbThreshold;
+
             _startCpuTime = _process.TotalProcessorTime;
             _cpuWatch.Start();
         }
