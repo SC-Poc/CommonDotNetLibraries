@@ -13,7 +13,7 @@ namespace Common
     }
 
     /// <summary>
-    /// Timer that runs Execute method in a loop with a fixed time interval between runs.
+    /// Timer that runs Execute method in a loop with a fixed time interval between runs (Execute method execution time is not included).
     /// </summary>
     public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
     {
@@ -75,7 +75,7 @@ namespace Common
             {
                 try
                 {
-                    var telemtryOperation = TelemetryHelper.StartRequestOperation($"{nameof(TimerPeriod)} for {_componentName}");
+                    var telemtryOperation = ApplicationInsightsTelemetry.StartRequestOperation($"{nameof(TimerPeriod)} for {_componentName}");
                     try
                     {
                         await Execute(cancellation);
@@ -83,12 +83,12 @@ namespace Common
                     catch (Exception exception)
                     {
                         await LogFatalErrorAsync(exception);
-                        TelemetryHelper.MarkFailedOperation(telemtryOperation);
-                        TelemetryHelper.TrackException(exception);
+                        ApplicationInsightsTelemetry.MarkFailedOperation(telemtryOperation);
+                        ApplicationInsightsTelemetry.TrackException(exception);
                     }
                     finally
                     {
-                        TelemetryHelper.StopOperation(telemtryOperation);
+                        ApplicationInsightsTelemetry.StopOperation(telemtryOperation);
                     }
 
                     try

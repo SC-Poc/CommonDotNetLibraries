@@ -44,7 +44,7 @@ namespace Lykke.Common
     /// <summary>
     /// CPU and RAM monitoring background checker based on TimerPeriod with once per minute frequency
     /// </summary>
-    public class ResourcesMonitor : TimerPeriod
+    public sealed class ResourcesMonitor : TimerPeriod
     {
         private const double _1mb = 1024 * 1024;
         private const string _cpuMetric = "Custom CPU";
@@ -55,8 +55,7 @@ namespace Lykke.Common
         private readonly Stopwatch _cpuWatch = new Stopwatch();
         private readonly double? _cpuThreshold;
         private readonly int? _ramMbThreshold;
-
-        private TimeSpan? _startCpuTime;
+        private readonly TimeSpan _startCpuTime;
 
         /// <summary>
         /// Inits monitoring with ApplicationInsights telemetry submission only.
@@ -65,6 +64,8 @@ namespace Lykke.Common
         public ResourcesMonitor(ILog log)
             : base((int)TimeSpan.FromMinutes(1).TotalMilliseconds, log)
         {
+            _startCpuTime = _process.TotalProcessorTime;
+            _cpuWatch.Start();
         }
 
         /// <summary>
@@ -79,31 +80,24 @@ namespace Lykke.Common
             _log = log ?? throw new ArgumentNullException(nameof(log));
             _cpuThreshold = cpuThreshold;
             _ramMbThreshold = ramMbThreshold;
+            _startCpuTime = _process.TotalProcessorTime;
+            _cpuWatch.Start();
         }
 
         public override Task Execute()
         {
-            TimeSpan endCpuTime = _process.TotalProcessorTime;
-            _cpuWatch.Stop();
+            // A very simple and not that accruate evaluation of how much CPU the process is take out of a core.
+            double cpuPercentage = (_process.TotalProcessorTime - _startCpuTime).TotalMilliseconds / _cpuWatch.ElapsedMilliseconds;
+            ApplicationInsightsTelemetry.TrackMetric(_cpuMetric, cpuPercentage);
 
-            if (_startCpuTime.HasValue)
-            {
-                // A very simple and not that accruate evaluation of how much CPU the process is take out of a core.
-                double cpuPercentage = (endCpuTime - _startCpuTime.Value).TotalMilliseconds / _cpuWatch.ElapsedMilliseconds;
-                TelemetryHelper.TrackMetric(_cpuMetric, cpuPercentage);
-
-                if (_cpuThreshold.HasValue && _cpuThreshold.Value <= cpuPercentage)
-                    _log.WriteMonitor(nameof(ResourcesMonitor), "", $"CPU usage is {cpuPercentage}");
-            }
+            if (_cpuThreshold.HasValue && _cpuThreshold.Value <= cpuPercentage)
+                _log.WriteMonitor(nameof(ResourcesMonitor), "", $"CPU usage is {cpuPercentage}");
 
             double memoryInMBytes = _process.WorkingSet64 / _1mb;
-            TelemetryHelper.TrackMetric(_ramMetric, memoryInMBytes);
+            ApplicationInsightsTelemetry.TrackMetric(_ramMetric, memoryInMBytes);
 
             if (_ramMbThreshold.HasValue && _ramMbThreshold.Value <= memoryInMBytes)
                 _log.WriteMonitor(nameof(ResourcesMonitor), "", $"RAM usage is {memoryInMBytes}");
-
-            _startCpuTime = _process.TotalProcessorTime;
-            _cpuWatch.Restart();
 
             return Task.CompletedTask;
         }
