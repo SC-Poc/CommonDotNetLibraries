@@ -19,8 +19,7 @@ namespace Lykke.Common
         /// <param name="log">ILog logger</param>
         public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder, ILog log)
         {
-            var monitor = new ResourcesMonitor(log);
-            builder.RegisterInstance(monitor)
+            builder.Register(c => new ResourcesMonitor(log))
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
@@ -35,8 +34,7 @@ namespace Lykke.Common
         /// <param name="ramMbThreshold">Optional RAM threshold for monitor logging</param>
         public static void RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, ILog log, double? cpuThreshold, int? ramMbThreshold)
         {
-            var monitor = new ResourcesMonitor(log, cpuThreshold, ramMbThreshold);
-            builder.RegisterInstance(monitor)
+            builder.Register(c => new ResourcesMonitor(log, cpuThreshold, ramMbThreshold))
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
