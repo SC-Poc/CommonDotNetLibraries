@@ -585,6 +585,9 @@ namespace Common
         
         public static string SanitizePhone(this string phone)
         {
+            if (string.IsNullOrEmpty(phone))
+                return string.Empty;
+            
             const int sanitizeCount = 5;
 
             int length = phone.Length;
