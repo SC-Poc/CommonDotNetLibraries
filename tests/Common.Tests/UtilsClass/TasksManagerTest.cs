@@ -31,7 +31,6 @@ namespace Common.Tests.UtilsClass
             Assert.Equal(TaskStatus.RanToCompletion, task.Status);
         }
 
-
         [Fact]
         public void ShouldCancelTask()
         {
@@ -39,7 +38,6 @@ namespace Common.Tests.UtilsClass
             _tasksManager.Cancel(42);
             Assert.Equal(TaskStatus.Canceled, task.Status);
         }
-
 
         [Fact]
         public void ShouldCancelAll()
@@ -59,16 +57,15 @@ namespace Common.Tests.UtilsClass
             using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(0.5)))
             {
                 var task = _tasksManager.Add(42, cts.Token);
-
                 var cancelled = Task.WaitAny(task, Task.Delay(TimeSpan.FromSeconds(1)));
+                var elapsed = DateTime.Now - now;
 
                 Assert.Equal(0, cancelled);
                 Assert.Equal(TaskStatus.Canceled, task.Status);
-                Assert.True((DateTime.Now - now).TotalSeconds < 1);
-                Assert.True((DateTime.Now - now).TotalSeconds >= 0.5);
+                Assert.True(elapsed.TotalSeconds < 1, $"Actual elapsed time = {elapsed.TotalSeconds} (>= 1 sec)");
+                Assert.True(elapsed.TotalSeconds >= 0.5, , $"Actual elapsed time = {elapsed.TotalSeconds} (< 0.5 sec)");
             }
         }
-
 
         [Fact]
         public void ShouldSetException()
