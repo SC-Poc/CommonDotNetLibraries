@@ -19,46 +19,30 @@ namespace Common
     {
         private readonly string _componentName;
         private readonly int _periodMs;
+        private readonly string _typeName;
+
+        private Task _task;
+        private CancellationTokenSource _cancellation;
+        private bool _isTelemetryDisabled;
 
         protected ILog Log { get; private set; }
+
+        public bool Working { get; private set; }
 
         protected TimerPeriod(string componentName, int periodMs, ILog log = null)
         {
             _componentName = componentName;
-
             _periodMs = periodMs;
+            _typeName = GetType().Name;
             Log = log;
         }
 
         protected TimerPeriod(int periodMs, ILog log = null)
         {
-            _periodMs = periodMs;
-            Log = log;
             _componentName = PlatformServices.Default.Application.ApplicationName;
-        }
-
-        protected void SetLogger(ILog log)
-        {
+            _periodMs = periodMs;
+            _typeName = GetType().Name;
             Log = log;
-        }
-
-        public bool Working { get; private set; }
-        private Task _task;
-        private CancellationTokenSource _cancellation; 
-
-        private async Task LogFatalErrorAsync(Exception exception)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(_componentName))
-                    await Log.WriteFatalErrorAsync("Loop", "", exception);
-                else
-                    await Log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
-            }
-            // ReSharper disable once EmptyGeneralCatchClause
-            catch
-            {
-            }
         }
 
         public abstract Task Execute();
@@ -67,44 +51,6 @@ namespace Common
         {
             // ReSharper disable once MethodSupportsCancellation
             return Execute();
-        }
-
-        private async Task ThreadMethod(CancellationToken cancellation)
-        {
-            while (!cancellation.IsCancellationRequested)
-            {
-                try
-                {
-                    var telemtryOperation = ApplicationInsightsTelemetry.StartRequestOperation($"{nameof(TimerPeriod)} for {_componentName}");
-                    try
-                    {
-                        await Execute(cancellation);
-                    }
-                    catch (Exception exception)
-                    {
-                        await LogFatalErrorAsync(exception);
-                        ApplicationInsightsTelemetry.MarkFailedOperation(telemtryOperation);
-                        ApplicationInsightsTelemetry.TrackException(exception);
-                    }
-                    finally
-                    {
-                        ApplicationInsightsTelemetry.StopOperation(telemtryOperation);
-                    }
-
-                    try
-                    {
-                        await Task.Delay(_periodMs, cancellation);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                    }
-                }
-                // Saves the loop if nothing didn't help
-                // ReSharper disable once EmptyGeneralCatchClause
-                catch
-                {
-                }
-            }
         }
 
         public virtual void Start()
@@ -147,6 +93,83 @@ namespace Common
         public void Dispose()
         {
             Stop();
+        }
+
+        protected void SetLogger(ILog log)
+        {
+            Log = log;
+        }
+
+        protected void DisableTelemetry()
+        {
+            _isTelemetryDisabled = true;
+        }
+
+        private async Task LogFatalErrorAsync(Exception exception)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(_componentName))
+                    await Log.WriteFatalErrorAsync("Loop", "", exception);
+                else
+                    await Log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
+            {
+            }
+        }
+
+        private async Task ThreadMethod(CancellationToken cancellation)
+        {
+            while (!cancellation.IsCancellationRequested)
+            {
+                try
+                {
+                    if (_isTelemetryDisabled)
+                    {
+                        try
+                        {
+                            await Execute(cancellation);
+                        }
+                        catch (Exception exception)
+                        {
+                            await LogFatalErrorAsync(exception);
+                        }
+                    }
+                    else
+                    {
+                        var telemtryOperation = ApplicationInsightsTelemetry.StartRequestOperation($"{nameof(TimerPeriod)} on {_typeName} for {_componentName}");
+                        try
+                        {
+                            await Execute(cancellation);
+                        }
+                        catch (Exception exception)
+                        {
+                            await LogFatalErrorAsync(exception);
+                            ApplicationInsightsTelemetry.MarkFailedOperation(telemtryOperation);
+                            ApplicationInsightsTelemetry.TrackException(exception);
+                        }
+                        finally
+                        {
+                            ApplicationInsightsTelemetry.StopOperation(telemtryOperation);
+                        }
+                    }
+
+                    try
+                    {
+                        await Task.Delay(_periodMs, cancellation);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                    }
+                }
+                // Saves the loop if nothing didn't help
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch
+                {
+                }
+            }
         }
     }
 }
