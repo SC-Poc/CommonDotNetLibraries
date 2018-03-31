@@ -62,10 +62,8 @@ namespace Lykke.Common
         /// </summary>
         /// <param name="log">ILog implementation</param>
         internal ResourcesMonitor(ILog log)
-            : base((int)TimeSpan.FromMinutes(1).TotalMilliseconds, log)
+            : this(log, null, null)
         {
-            _startCpuTime = _process.TotalProcessorTime;
-            _cpuWatch.Start();
         }
 
         /// <summary>
@@ -89,6 +87,8 @@ namespace Lykke.Common
 
             _startCpuTime = _process.TotalProcessorTime;
             _cpuWatch.Start();
+
+            DisableTelemetry();
         }
 
         public override Task Execute()
