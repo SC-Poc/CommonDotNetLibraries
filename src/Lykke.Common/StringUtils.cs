@@ -606,6 +606,17 @@ namespace Common
         {
             return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
         }
+        
+        public static bool IsPasswordComplex(this string password, int minLength = 8, bool useSpecialChars = true)
+        {
+            if (string.IsNullOrEmpty(password) || password.Length < minLength)
+                return false;
+            
+            string passwordPattern = $"^(?=(.*\\d)+)(?=.*[a-z])(?=.*[A-Z]).{{{minLength},}}$";
+            string passwordPatternWithChars = $"^(?=(.*\\d)+)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\\d]).{{{minLength},}}$";
+
+            return Regex.IsMatch(password, useSpecialChars ? passwordPatternWithChars : passwordPattern);
+        }
     }
 
     public static class IdGenerator

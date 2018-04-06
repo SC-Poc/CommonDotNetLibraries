@@ -80,5 +80,41 @@ namespace Common.Tests.UtilsClass
             Assert.Equal("3", hash1);
             Assert.Equal("684843D3", hash8);
         }
+        
+        [Fact]
+        public void Test_IsPasswordComplex()
+        {
+            //complex password: >=8 chars, lower, upper and special chars
+            string password = "Qwer12$_@#";
+            Assert.True(password.IsPasswordComplex());
+            
+            //complex password: don't use special chars
+            password = "Qwer1234";
+            Assert.True(password.IsPasswordComplex(useSpecialChars:false));
+            
+            //complex password: don't use special chars and min length = 4 chars
+            password = "Qwer1234";
+            Assert.True(password.IsPasswordComplex(4, false));
+            
+            //not complex password: no special chars
+            password = "Qwer1234";
+            Assert.False(password.IsPasswordComplex());
+            
+            //not complex password: < 8 chars
+            password = "Qwe123$";
+            Assert.False(password.IsPasswordComplex());
+            
+            //not complex password: not digits
+            password = "Qwe#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+            
+            //not complex password: not upper case chars
+            password = "qwe1#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+            
+            //not complex password: not lower case chars
+            password = "QWE1#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+        }
     }
 }
