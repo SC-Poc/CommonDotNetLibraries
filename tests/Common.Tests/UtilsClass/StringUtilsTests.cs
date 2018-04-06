@@ -104,15 +104,15 @@ namespace Common.Tests.UtilsClass
             password = "Qwe123$";
             Assert.False(password.IsPasswordComplex());
             
-            //not complex password: not digits
+            //not complex password: no digits
             password = "Qwe#@!!_$";
             Assert.False(password.IsPasswordComplex());
             
-            //not complex password: not upper case chars
+            //not complex password: no upper case chars
             password = "qwe1#@!!_$";
             Assert.False(password.IsPasswordComplex());
             
-            //not complex password: not lower case chars
+            //not complex password: no lower case chars
             password = "QWE1#@!!_$";
             Assert.False(password.IsPasswordComplex());
         }
