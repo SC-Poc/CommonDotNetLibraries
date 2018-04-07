@@ -619,10 +619,11 @@ namespace Common
             if (string.IsNullOrEmpty(password) || password.Length < minLength)
                 return false;
             
-            string passwordPattern = $"^(?=(.*\\d)+)(?=.*[a-z])(?=.*[A-Z]).{{{minLength},}}$";
-            string passwordPatternWithChars = $"^(?=(.*\\d)+)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z\\d]).{{{minLength},}}$";
+            if (minLength <= 0)
+                throw new ArgumentException($"{nameof(minLength)} must be > 0");
 
-            return Regex.IsMatch(password, useSpecialChars ? passwordPatternWithChars : passwordPattern);
+            return password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower)
+                   && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d])."));
         }
     }
 
