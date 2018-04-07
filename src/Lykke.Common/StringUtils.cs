@@ -606,6 +606,25 @@ namespace Common
         {
             return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
         }
+        
+        /// <summary>
+        /// Checks password for compexity (must contains digits, upper and lower case chars and special chars)
+        /// </summary>
+        /// <param name="password">password to check</param>
+        /// <param name="minLength">min password length</param>
+        /// <param name="useSpecialChars">check for special chars or not</param>
+        /// <returns></returns>
+        public static bool IsPasswordComplex(this string password, int minLength = 8, bool useSpecialChars = true)
+        {
+            if (string.IsNullOrEmpty(password) || password.Length < minLength)
+                return false;
+            
+            if (minLength <= 0)
+                throw new ArgumentException($"{nameof(minLength)} must be > 0");
+
+            return password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower)
+                   && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d])."));
+        }
     }
 
     public static class IdGenerator
