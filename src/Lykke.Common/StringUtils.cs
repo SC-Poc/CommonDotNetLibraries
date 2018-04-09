@@ -625,6 +625,23 @@ namespace Common
             return password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower)
                    && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d])."));
         }
+
+        /// <summary>
+        /// Overwrites characters of a string in memory with specified one. This is unsafe operation!
+        /// </summary>
+        public static void OvewriteInMemory(this string str, char replacementChar)
+        {
+            unsafe
+            {
+                fixed (char* cStr = str)
+                {
+                    for (var i = 0; i < str.Length; i++)
+                    {
+                        cStr[i] = replacementChar;
+                    }
+                }
+            }
+        }
     }
 
     public static class IdGenerator
