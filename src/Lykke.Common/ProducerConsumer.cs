@@ -8,11 +8,12 @@ namespace Common
 {
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
     {
-        protected readonly string _componentName;
         private readonly object _startStopLockobject = new object();
-
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
+        private readonly string _metricName = $"ProducerConsumer for {typeof(T).Name}"; 
 
+        protected readonly string _componentName;
+        
         protected ILog Log { get; }
 
         protected abstract Task Consume(T item);
@@ -53,6 +54,8 @@ namespace Common
                             return;
 
                         await Consume(value);
+                        
+                        ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
                     }
                     catch (Exception exception)
                     {
@@ -94,6 +97,7 @@ namespace Common
                 var last = _last;
                 _last = new TaskCompletionSource<T>();
                 _queue.Enqueue(_last);
+                ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
                 last.SetResult(item);
             }
 
