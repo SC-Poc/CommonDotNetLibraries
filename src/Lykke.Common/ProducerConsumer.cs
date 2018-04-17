@@ -21,11 +21,15 @@ namespace Common
         protected ProducerConsumer(string componentName, ILog log)
         {
             _componentName = componentName;
+            _metricName = $"ProducerConsumer<{typeof(T).Name}> for {_componentName}";   
+            
             Log = log;
         }
 
         protected ProducerConsumer(ILog log)
         {
+            _metricName = $"ProducerConsumer<{typeof(T).Name}>";
+            
             Log = log;
         }
 
