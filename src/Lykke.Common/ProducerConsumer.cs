@@ -10,7 +10,7 @@ namespace Common
     {
         private readonly object _startStopLockobject = new object();
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
-        private readonly string _metricName = $"ProducerConsumer for {typeof(T).Name}"; 
+        private readonly string _metricName; 
 
         protected readonly string _componentName;
         
