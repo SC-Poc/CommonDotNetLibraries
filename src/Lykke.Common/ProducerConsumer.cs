@@ -10,7 +10,8 @@ namespace Common
     {
         private readonly object _startStopLockobject = new object();
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
-        private readonly string _metricName; 
+        private readonly string _metricName;
+        private readonly bool _isAppInisghtsMetricEnabled;
 
         protected readonly string _componentName;
         
@@ -19,16 +20,30 @@ namespace Common
         protected abstract Task Consume(T item);
 
         protected ProducerConsumer(string componentName, ILog log)
+            : this(componentName, log, false)
         {
-            _componentName = componentName;
-            _metricName = $"ProducerConsumer<{typeof(T).Name}> for {_componentName}";   
-            
-            Log = log;
         }
 
         protected ProducerConsumer(ILog log)
+            : this(null, log, false)
         {
-            _metricName = $"ProducerConsumer<{typeof(T).Name}>";
+        }
+        
+        protected ProducerConsumer(
+            string componentName,
+            ILog log,
+            bool enableAppInisghtsMetric)
+        {
+            if (string.IsNullOrWhiteSpace(componentName))
+            {
+                _metricName = $"ProducerConsumer<{typeof(T).Name}> count";
+            }
+            else
+            {
+                _componentName = componentName;
+                _metricName = $"ProducerConsumer<{typeof(T).Name}> count for {_componentName}";    
+            }
+            _isAppInisghtsMetricEnabled = enableAppInisghtsMetric;
             
             Log = log;
         }
@@ -59,7 +74,8 @@ namespace Common
 
                         await Consume(value);
                         
-                        ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
+                        if (_isAppInisghtsMetricEnabled)
+                            ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
                     }
                     catch (Exception exception)
                     {
@@ -101,7 +117,8 @@ namespace Common
                 var last = _last;
                 _last = new TaskCompletionSource<T>();
                 _queue.Enqueue(_last);
-                ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
+                if (_isAppInisghtsMetricEnabled)
+                    ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
                 last.SetResult(item);
             }
 
