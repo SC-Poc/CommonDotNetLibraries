@@ -11,6 +11,7 @@ namespace Lykke.Common.Cache
 {
     /// <summary>
     ///    Cache using implementation of <see cref="T:Microsoft.Extensions.Caching.Memory.IMemoryCache" /> to store its entries.
+    ///    In contrast to IMemoryCache and ConcurrentDictionary this cache implementation prevents multiple calls of data entry factory.
     /// </summary>
     public class OnDemandDataCache<T>
         where T : class 
