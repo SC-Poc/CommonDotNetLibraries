@@ -21,14 +21,15 @@ namespace Lykke.Common.Cache
         }
 
         public OnDemandDataCache(IOptions<MemoryCacheOptions> optionsAccessor)
+            : this(new MemoryCache(optionsAccessor))
         {
-            _innerCache = new MemoryCache(optionsAccessor);
-            _locks = new ConcurrentDictionary<string, SemaphoreSlim>();
+
         }
 
         public OnDemandDataCache(IMemoryCache memoryCache)
         {
             _innerCache = memoryCache;
+            _locks = new ConcurrentDictionary<string, SemaphoreSlim>();
         }
 
 
