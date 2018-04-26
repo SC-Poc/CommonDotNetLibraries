@@ -45,7 +45,10 @@ namespace Common
             Log = log;
         }
 
-        public abstract Task Execute();
+        public virtual Task Execute()
+        {
+            return Task.CompletedTask;
+        }
 
         public virtual Task Execute(CancellationToken cancellation)
         {
@@ -110,9 +113,9 @@ namespace Common
             try
             {
                 if (string.IsNullOrWhiteSpace(_componentName))
-                    await Log.WriteFatalErrorAsync("Loop", "", exception);
+                    await Log.WriteErrorAsync("Loop", "", exception);
                 else
-                    await Log.WriteFatalErrorAsync(_componentName, "Loop", "", exception);
+                    await Log.WriteErrorAsync(_componentName, "Loop", "", exception);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch
