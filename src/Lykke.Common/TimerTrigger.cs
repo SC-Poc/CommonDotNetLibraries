@@ -57,9 +57,17 @@ namespace Common
             TimeSpan period,
             [NotNull] ILog log)
         {
+            if (componentName == null)
+            {
+                throw new ArgumentNullException(nameof(componentName));
+            }
             if (period <= TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(nameof(period), period, "Period should be positive time span");
+            }
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
             }
 
             _timerPeriod = new DelegatingTimerPeriod(componentName, period, log, OnTriggered);

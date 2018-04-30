@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.PlatformAbstractions;
 using Autofac;
 using Common.Log;
+using JetBrains.Annotations;
 
 namespace Common
 {
@@ -29,20 +30,24 @@ namespace Common
 
         public bool Working { get; private set; }
 
-        protected TimerPeriod(string componentName, int periodMs, ILog log = null)
+        protected TimerPeriod(
+            [CanBeNull] string componentName, 
+            int periodMs, 
+            ILog log = null)
         {
-            _componentName = componentName;
+            _componentName = componentName ?? PlatformServices.Default.Application.ApplicationName;
             _periodMs = periodMs;
             _typeName = GetType().Name;
-            Log = log;
+
+            Log = log?.CreateComponentScope(_componentName);
         }
 
-        protected TimerPeriod(int periodMs, ILog log = null)
+        protected TimerPeriod(
+            int periodMs, 
+            ILog log) :
+
+            this(null, periodMs, log)
         {
-            _componentName = PlatformServices.Default.Application.ApplicationName;
-            _periodMs = periodMs;
-            _typeName = GetType().Name;
-            Log = log;
         }
 
         public virtual Task Execute()
@@ -59,11 +64,14 @@ namespace Common
         public virtual void Start()
         {
             if (Log == null)
-                throw new Exception(
-                    "Logger has to be inited" + (string.IsNullOrWhiteSpace(_componentName) ? "" : $" for: {_componentName}"));
+            {
+                throw new Exception("Logger has to be inited");
+            }
 
             if (Working)
+            {
                 return;
+            }
 
             Working = true;
 
@@ -79,9 +87,12 @@ namespace Common
                 return;
             }
 
-            _cancellation.Cancel();
+            _cancellation?.Cancel();
+            _cancellation?.Dispose();
 
-            _task?.Wait();
+            _task?.ConfigureAwait(false).GetAwaiter().GetResult();
+            _task?.Dispose();
+
             _task = null;
             _cancellation = null;
 
@@ -90,7 +101,7 @@ namespace Common
 
         public string GetComponentName()
         {
-            return _componentName ?? "";
+            return _componentName;
         }
 
         public void Dispose()
@@ -98,9 +109,10 @@ namespace Common
             Stop();
         }
 
+        [Obsolete("Pass log to the ctor")]
         protected void SetLogger(ILog log)
         {
-            Log = log;
+            Log = log?.CreateComponentScope(_componentName);
         }
 
         protected void DisableTelemetry()
@@ -108,14 +120,11 @@ namespace Common
             _isTelemetryDisabled = true;
         }
 
-        private async Task LogFatalErrorAsync(Exception exception)
+        private void LogFatalError(Exception exception)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(_componentName))
-                    await Log.WriteErrorAsync("Loop", "", exception);
-                else
-                    await Log.WriteErrorAsync(_componentName, "Loop", "", exception);
+                Log.WriteError("Loop", "", exception);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch
@@ -133,11 +142,11 @@ namespace Common
                     {
                         try
                         {
-                            await Execute(cancellation);
+                            await Execute(cancellation).ConfigureAwait(false);
                         }
                         catch (Exception exception)
                         {
-                            await LogFatalErrorAsync(exception);
+                            LogFatalError(exception);
                         }
                     }
                     else
@@ -145,11 +154,11 @@ namespace Common
                         var telemtryOperation = ApplicationInsightsTelemetry.StartRequestOperation($"{nameof(TimerPeriod)} on {_typeName} for {_componentName}");
                         try
                         {
-                            await Execute(cancellation);
+                            await Execute(cancellation).ConfigureAwait(false);
                         }
                         catch (Exception exception)
                         {
-                            await LogFatalErrorAsync(exception);
+                            LogFatalError(exception);
                             ApplicationInsightsTelemetry.MarkFailedOperation(telemtryOperation);
                             ApplicationInsightsTelemetry.TrackException(exception);
                         }
@@ -161,7 +170,7 @@ namespace Common
 
                     try
                     {
-                        await Task.Delay(_periodMs, cancellation);
+                        await Task.Delay(_periodMs, cancellation).ConfigureAwait(false);
                     }
                     catch (TaskCanceledException)
                     {
