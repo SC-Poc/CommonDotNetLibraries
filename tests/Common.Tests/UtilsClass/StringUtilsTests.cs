@@ -136,5 +136,27 @@ namespace Common.Tests.UtilsClass
             password = "СЛОЖНЫЙ123#!@";
             Assert.False(password.IsPasswordComplex());
         }
+
+        [Fact]
+        public void Test_SanitizeIp()
+        {
+            string ip = null;
+            Assert.Equal(string.Empty, ip.SanitizeIp());
+            
+            ip = string.Empty;
+            Assert.Equal(string.Empty, ip.SanitizeIp());
+            
+            ip = "    ";
+            Assert.Equal(string.Empty, ip.SanitizeIp());
+            
+            ip = "::1";
+            Assert.Equal("::1", ip.SanitizeIp());
+            
+            ip = "127.0";
+            Assert.Equal("127.0", ip.SanitizeIp());
+            
+            ip = "192.168.1.100";
+            Assert.Equal("192.168.1.0", ip.SanitizeIp());
+        }
     }
 }
