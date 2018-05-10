@@ -625,6 +625,27 @@ namespace Common
             return password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower)
                    && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d])."));
         }
+        
+        /// <summary>
+        /// Sanitizes IPv4 by setting last number to 0
+        /// <example>1.2.3.4 -> 1.2.3.0</example>
+        /// </summary>
+        /// <param name="ip">ip to sanitize</param>
+        /// <returns></returns>
+        public static string SanitizeIp(this string ip)
+        {
+            if (string.IsNullOrEmpty(ip?.Trim()))
+                return string.Empty;
+
+            var values = ip.Split('.');
+
+            if (values.Length != 4)
+                return ip;
+
+            values[3] = "0";
+
+            return string.Join(".", values);
+        }
 
         /// <summary>
         /// Overwrites characters of a string in memory with specified one. This is unsafe operation!
