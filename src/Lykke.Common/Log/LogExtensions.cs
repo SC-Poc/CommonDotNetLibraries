@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 
 namespace Common.Log
 {
+    [Obsolete("Use new Lykke.Common.Log.ILogger + Lykke.Common.Log.ApplicationLog + Lykke.Common.Log.ComponentLog + Lykke.Common.Log.ProcessLog")]
     [PublicAPI]
     public static class LogExtensions
     {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Log
 {
+    [Obsolete("Use new Lykke.Common.Log.ComponentLog")]
     internal class LogComponentScope : ILog
     {
         private readonly string _component;
@@ -12,6 +14,22 @@ namespace Common.Log
         {
             _component = component;
             _impl = impl;
+        }
+
+        public void Write(LogLevel logLevel, EventId eventId, string message, object context, Exception exception, DateTime? moment,
+            string appName, string appVersion, string envInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            throw new NotImplementedException();
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)

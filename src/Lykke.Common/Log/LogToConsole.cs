@@ -5,6 +5,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Common.Log
 {
+    [Obsolete("Use new Lykke.Common.Log.Logger.ConsoleLogger")]
     public class LogToConsole : ILog, IConsole
     {
         private static readonly object ColorSync = new object();

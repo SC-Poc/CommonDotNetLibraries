@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.PlatformAbstractions;
 using Common.RemoteUi;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Log
 {
@@ -13,6 +14,7 @@ namespace Common.Log
         };
     }
 
+    [Obsolete("Use new Lykke.Common.Log.Logger.GuiTableLogger")]
     public class LogToMemory : ILog, IGuiTable
     {
         private readonly GuiTableLastData _guiTableLastData = new GuiTableLastData(50, LogUtils.GuiHeader);
@@ -26,6 +28,22 @@ namespace Common.Log
         {
             var app = PlatformServices.Default.Application;
             _component = $"{app.ApplicationName} {app.ApplicationVersion}";
+        }
+
+        public void Write(LogLevel logLevel, EventId eventId, string message, object context, Exception exception, DateTime? moment,
+            string appName, string appVersion, string envInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            throw new NotImplementedException();
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)

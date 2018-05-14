@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Common.Log
 {
     /// <summary>
     /// Builder for <see cref="AggregateLogger"/>.
     /// </summary>
+    [Obsolete("Use new Lykke.Common.Log.Loggers.AggregateLogger")]
     public class LogAggregate
     {
         private readonly List<ILog> _logs = new List<ILog>();
@@ -30,7 +32,10 @@ namespace Common.Log
         /// <returns></returns>
         public ILog CreateLogger()
         {
-            return new AggregateLogger(_logs);
+            lock (_sync)
+            {
+                return new AggregateLogger(_logs.ToArray());
+            }
         }
     }
 }

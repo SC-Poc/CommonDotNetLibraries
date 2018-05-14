@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Log
 {
     public interface ILog
     {
+        void Write(
+            LogLevel logLevel, 
+            EventId eventId, 
+            string message, 
+            object context, 
+            Exception exception, 
+            DateTime? moment, 
+            string appName, 
+            string appVersion, 
+            string envInfo);
+        bool IsEnabled(LogLevel logLevel);
+        IDisposable BeginScope<TState>(TState state);
+
         /// <summary>
         /// Writes info log message
         /// </summary>
         /// <remarks>
         /// Write an info message about whatever you need to to simplify debugging and maintenance
         /// </remarks>
+        [Obsolete]
         Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes monitoring log message
@@ -18,6 +33,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a monitoring message about app lifecycle events or health events (start, stop, etc.)
         /// </remarks>
+        [Obsolete]
         Task WriteMonitorAsync(string component, string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes warning message
@@ -25,6 +41,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a warning when something went wrong without any exceptions, and app can still run normally
         /// </remarks>
+        [Obsolete]
         Task WriteWarningAsync(string component, string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes warning message with exception
@@ -32,6 +49,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a warning with exception when you catch an exception but it is not the error for you, and app can still run normally
         /// </remarks>
+        [Obsolete]
         Task WriteWarningAsync(string component, string process, string context, string info, Exception ex, DateTime? dateTime = null);
         /// <summary>
         /// Writes error message
@@ -39,6 +57,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a error when exception was thrown, but app can still run
         /// </remarks>
+        [Obsolete]
         Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null);
         /// <summary>
         /// Writes fatal error message
@@ -46,6 +65,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a fatal error when exception was thrown and app can't still run anymore
         /// </remarks>
+        [Obsolete]
         Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null);
         /// <summary>
         /// Writes info log message
@@ -53,6 +73,7 @@ namespace Common.Log
         /// <remarks>
         /// Write an info message about whatever you need to to simplify debugging and maintenance
         /// </remarks>
+        [Obsolete]
         Task WriteInfoAsync(string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes monitoring log message
@@ -60,6 +81,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a monitoring message about app lifecycle events or health events (start, stop, etc.)
         /// </remarks>
+        [Obsolete]
         Task WriteMonitorAsync(string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes warning message
@@ -67,6 +89,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a warning when something went wrong without any exceptions, and app can still run normally
         /// </remarks>
+        [Obsolete]
         Task WriteWarningAsync(string process, string context, string info, DateTime? dateTime = null);
         /// <summary>
         /// Writes warning message with exception
@@ -74,6 +97,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a warning with exception when you catch an exception but it is not the error for you, and app can still run normally
         /// </remarks>
+        [Obsolete]
         Task WriteWarningAsync(string process, string context, string info, Exception ex, DateTime? dateTime = null);
         /// <summary>
         /// Writes error message
@@ -81,6 +105,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a error when exception was thrown, but app can still run
         /// </remarks>
+        [Obsolete]
         Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null);
         /// <summary>
         /// Writes fatal error message
@@ -88,6 +113,7 @@ namespace Common.Log
         /// <remarks>
         /// Write a fatal error when exception was thrown and app can't still run anymore
         /// </remarks>
+        [Obsolete]
         Task WriteFatalErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null);
     }
 }
