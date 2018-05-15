@@ -1,9 +1,11 @@
-﻿using Common.Log;
+﻿using System;
+using Common.Log;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions.Internal;
 
 namespace Lykke.Common.Log
 {
-    public class LogFactory : ILogFactory
+    internal sealed class LogFactory : ILogFactory
     {
         private readonly ILoggerFactory _loggerFactory;
 
@@ -12,9 +14,28 @@ namespace Lykke.Common.Log
             _loggerFactory = loggerFactory;
         }
 
-        public ILog CreateLog(string componentName)
+        public ILog CreateLog<TComponent>(TComponent component, string componentNameSuffix)
         {
-            return new Log(_loggerFactory.CreateLogger(componentName));
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+            if (string.IsNullOrWhiteSpace(componentNameSuffix))
+            {
+                throw new ArgumentException("Should be non empty string", nameof(componentNameSuffix));
+            }
+
+            return new Log(_loggerFactory.CreateLogger($"{TypeNameHelper.GetTypeDisplayName(component.GetType())}[{componentNameSuffix}]"));
+        }
+
+        public ILog CreateLog<TComponent>(TComponent component)
+        {
+            if (component == null)
+            {
+                throw new ArgumentNullException(nameof(component));
+            }
+
+            return new Log(_loggerFactory.CreateLogger(TypeNameHelper.GetTypeDisplayName(component.GetType())));
         }
     }
 }

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace Common.Log
 {
-    [Obsolete("Use new Lykke.Common.Log.ILogger + Lykke.Common.Log.ApplicationLog + Lykke.Common.Log.ComponentLog + Lykke.Common.Log.ProcessLog")]
+    [Obsolete("Use new extension methods defined in the MicrosoftLoggingBasedLogExtensions")]
     [PublicAPI]
     public static class LogExtensions
     {
@@ -17,6 +17,7 @@ namespace Common.Log
         /// <param name="log">Log to wrap</param>
         /// <param name="component">Component name for which scope will be created</param>
         /// <returns></returns>
+        [Obsolete("Use new Lykke.Common.Log.ILogFactory")]
         public static ILog CreateComponentScope(this ILog log, string component)
         {
             return new LogComponentScope(component, log);
@@ -29,6 +30,7 @@ namespace Common.Log
         /// Write an info message about whatever you need to to simplify debugging and maintenance.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete("Use overloads of the new extension methods: Info()")]
         public static void WriteInfo(this ILog log, string process, object context, string info, DateTime? dateTime = null)
         {
             log.WriteInfoAsync(process, GetContextString(context), info, dateTime).GetAwaiter().GetResult();
@@ -41,6 +43,7 @@ namespace Common.Log
         /// Write a monitoring message about app lifecycle events or health events (start, stop, etc.).
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete] // TODO
         public static void WriteMonitor(this ILog log, string process, object context, string info, DateTime? dateTime = null)
         {
             log.WriteMonitorAsync(process, GetContextString(context), info, dateTime).GetAwaiter().GetResult();
@@ -53,6 +56,7 @@ namespace Common.Log
         /// Write a warning when something went wrong without any exceptions, and app can still run normally.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete("Use overloads of the new extension methods: Warning()")]
         public static void WriteWarning(this ILog log, string process, object context, string info, DateTime? dateTime = null)
         {
             log.WriteWarningAsync(process, GetContextString(context), info, dateTime).GetAwaiter().GetResult();
@@ -65,6 +69,7 @@ namespace Common.Log
         /// Write a warning with exception when you catch an exception but it is not the error for you, and app can still run normally.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete("Use overloads of the new extension methods: Warning()")]
         public static void WriteWarning(this ILog log, string process, object context, string info, Exception ex, DateTime? dateTime = null)
         {
             log.WriteWarningAsync(process, GetContextString(context), info, ex, dateTime).GetAwaiter().GetResult();
@@ -77,6 +82,7 @@ namespace Common.Log
         /// Write a error when exception was thrown, but app can still run.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete("Use overloads of the new extension methods: Error()")]
         public static void WriteError(this ILog log, string process, object context, [CanBeNull] Exception exception = null, DateTime? dateTime = null)
         {
             log.WriteErrorAsync(process, GetContextString(context), exception, dateTime).GetAwaiter().GetResult();
@@ -89,6 +95,7 @@ namespace Common.Log
         /// Write a fatal error when exception was thrown and app can't still run anymore.
         /// If <paramref name="context"/> is string, it will be passed as is, otherwise it will be converted to the Json
         /// </remarks>
+        [Obsolete("Use overloads of the new extension methods: Critical()")]
         public static void WriteFatalError(this ILog log, string process, object context, [CanBeNull] Exception exception = null, DateTime? dateTime = null)
         {
             log.WriteFatalErrorAsync(process, GetContextString(context), exception, dateTime).GetAwaiter().GetResult();

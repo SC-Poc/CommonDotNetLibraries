@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Lykke.Common.Log
 {
-    public sealed class Log : ILog
+    internal sealed class Log : ILog
     {
         private readonly ILogger _logger;
 
@@ -14,14 +14,9 @@ namespace Lykke.Common.Log
             _logger = logger;
         }
 
-        void ILog.Write(LogLevel logLevel, EventId eventId, string message, object context, Exception exception, DateTime? moment, string appName, string appVersion, string envInfo)
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            _logger.Log(
-                logLevel,
-                eventId,
-                new LogEntryParameters(appName, appVersion, envInfo, message, context, moment ?? DateTime.UtcNow),
-                exception,
-                (parameters, ex) => message);
+            _logger.Log(logLevel, eventId, state, exception, formatter);
         }
 
         bool ILog.IsEnabled(LogLevel logLevel)
@@ -29,10 +24,12 @@ namespace Lykke.Common.Log
             return _logger.IsEnabled(logLevel);
         }
 
-        IDisposable ILog.BeginScope<TState>(TState state)
+        IDisposable ILog.BeginScope(string scopeMessage)
         {
-            return _logger.BeginScope(state);
+            return _logger.BeginScope(scopeMessage);
         }
+
+        #region Not implemented obsolete methods
 
         Task ILog.WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime)
         {
@@ -95,5 +92,7 @@ namespace Lykke.Common.Log
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

@@ -1,29 +1,38 @@
 ﻿using System;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions.Internal;
 
 namespace Common.Log
 {
-    [Obsolete("Use new Lykke.Common.Log.Loggers.EmptyLogger")]
+    // TODO: Since only ILogFactory should be injected in the services, this class should be made internal and sealed when legacy logging system will be removed
+    // TODO: Should be moved to the Lykke.Common.Log namespace, when legacy loggin system will be removed
+
+    /// <summary>
+    /// Log that do nothing. Used by the <see cref="EmptyLogFactory"/>
+    /// </summary>
+    [PublicAPI]
     public class EmptyLog : ILog
     {
         public static EmptyLog Instance { get; } = new EmptyLog();
 
-        public void Write(LogLevel logLevel, EventId eventId, string message, object context, Exception exception, DateTime? moment,
-            string appName, string appVersion, string envInfo)
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            throw new NotImplementedException();
         }
 
-        public bool IsEnabled(LogLevel logLevel)
+        bool ILog.IsEnabled(LogLevel logLevel)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        IDisposable ILog.BeginScope(string scopeMessage)
         {
-            throw new NotImplementedException();
+            return NullScope.Instance;
         }
+
+        #region Obsolete methods
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
@@ -85,5 +94,7 @@ namespace Common.Log
         {
             return Task.CompletedTask;
         }
+
+        #endregion
     }
 }

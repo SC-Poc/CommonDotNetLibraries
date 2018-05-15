@@ -9,7 +9,7 @@ namespace Common.Log
     /// <summary>
     /// Sends log messages to all specified loggers.
     /// </summary>
-    [Obsolete("Use new Lykke.Common.Log.Loggers.AggregateLogger")]
+    [Obsolete("Use new Lykke.Common.Log.ILogFactory")]
     public class AggregateLogger : 
         ILog,
         IStopable
@@ -66,18 +66,17 @@ namespace Common.Log
             _disposed = true;
         }
 
-        public void Write(LogLevel logLevel, EventId eventId, string message, object context, Exception exception, DateTime? moment,
-            string appName, string appVersion, string envInfo)
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsEnabled(LogLevel logLevel)
+        bool ILog.IsEnabled(LogLevel logLevel)
         {
             throw new NotImplementedException();
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        IDisposable ILog.BeginScope(string scopeMessage)
         {
             throw new NotImplementedException();
         }

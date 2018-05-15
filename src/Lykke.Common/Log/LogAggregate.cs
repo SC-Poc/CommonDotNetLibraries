@@ -6,7 +6,7 @@ namespace Common.Log
     /// <summary>
     /// Builder for <see cref="AggregateLogger"/>.
     /// </summary>
-    [Obsolete("Use new Lykke.Common.Log.Loggers.AggregateLogger")]
+    [Obsolete("Use new Lykke.Common.Log.ILogFactory")]
     public class LogAggregate
     {
         private readonly List<ILog> _logs = new List<ILog>();
