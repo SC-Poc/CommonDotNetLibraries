@@ -10,8 +10,19 @@ namespace Lykke.Common
     [PublicAPI]
     public static class AppEnvironment
     {
-        public static readonly string EnvInfo = Environment.GetEnvironmentVariable("ENV_INFO");
-        public static readonly string Version = PlatformServices.Default.Application.ApplicationVersion;
-        public static readonly string Name = PlatformServices.Default.Application.ApplicationName;
+        /// <summary>
+        /// ENV_INFO environment variable 
+        /// </summary>
+        public static string EnvInfo { get; } = Environment.GetEnvironmentVariable("ENV_INFO");
+
+        /// <summary>
+        /// Version of the app
+        /// </summary>
+        public static string Version { get; } = PlatformServices.Default.Application.ApplicationVersion;
+
+        /// <summary>
+        /// Name of the app
+        /// </summary>
+        public static string Name { get; } = PlatformServices.Default.Application.ApplicationName;
     }
 }

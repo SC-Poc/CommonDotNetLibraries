@@ -50,7 +50,6 @@ namespace Lykke.Common.Log
             {
                 buidler.AddFilter("System", LogLevel.Warning);
                 buidler.AddFilter("Microsoft", LogLevel.Warning);
-                buidler.AddFilter("Microsoft.AspNetCore", LogLevel.Information);
 
                 configure(buidler);
             });
