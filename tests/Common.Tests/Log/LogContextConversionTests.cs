@@ -24,7 +24,8 @@ namespace Common.Tests.Log
 
             const string expectedContext2 = "{\r\n  \"text\": \"str\",\r\n  \"number\": 1\r\n}";
 
-            Assert.Equal(expectedContext2, str2);
+            Assert.NotNull(str2);
+            Assert.Equal(expectedContext2.Replace("\r\n", "\n"), str2.Replace("\r\n", "\n"));
             Assert.Null(str3);
         }
     }
