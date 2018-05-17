@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Lykke.Common.Log
 {
@@ -13,6 +14,6 @@ namespace Lykke.Common.Log
         /// </summary>
         /// <param name="healthMessage">Message that describes app health change</param>
         /// <param name="context">Health change context, if any</param>
-        void Notify([NotNull] string healthMessage, [CanBeNull] object context = null);
+        Task NotifyAsync([NotNull] string healthMessage, [CanBeNull] object context = null);
     }
 }
