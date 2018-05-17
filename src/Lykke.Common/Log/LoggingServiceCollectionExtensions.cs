@@ -17,6 +17,7 @@ namespace Lykke.Common.Log
         /// </summary>
         /// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
         /// <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> so that additional calls can be chained.</returns>
+        [NotNull]
         public static IServiceCollection AddLykkeLogging([NotNull] this IServiceCollection services)
         {
             if (services == null)
@@ -33,6 +34,7 @@ namespace Lykke.Common.Log
         /// <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> to add services to.</param>
         /// <param name="configure">The <see cref="T:Microsoft.Extensions.Logging.ILoggingBuilder" /> configuration delegate.</param>
         /// <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" /> so that additional calls can be chained.</returns>
+        [NotNull]
         public static IServiceCollection AddLykkeLogging([NotNull] this IServiceCollection services, [NotNull] Action<ILoggingBuilder> configure)
         {
             if (services == null)

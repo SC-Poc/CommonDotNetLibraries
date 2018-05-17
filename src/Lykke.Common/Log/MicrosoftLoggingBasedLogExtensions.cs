@@ -12,6 +12,8 @@ namespace Lykke.Common.Log
     [PublicAPI]
     public static class MicrosoftLoggingBasedLogExtensions
     {
+        private static Func<LogEntryParameters, Exception, string> _defaultMessageFormatter = (parameters, exception) => parameters.Message;
+
         #region Trace
 
         /// <summary>
@@ -573,7 +575,7 @@ namespace Lykke.Common.Log
                     context,
                     moment),
                 exception,
-                (parameters, ex) => parameters.Message);
+                _defaultMessageFormatter);
         }
 
         #endregion
