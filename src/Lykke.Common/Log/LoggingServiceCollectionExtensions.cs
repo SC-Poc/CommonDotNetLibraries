@@ -43,6 +43,18 @@ namespace Lykke.Common.Log
             {
                 throw new ArgumentNullException(nameof(configure));
             }
+            if (AppEnvironment.EnvInfo == null)
+            {
+                throw new InvalidOperationException("ENV_INFO environment should be not empty. If you run application in your local machine, please fill up ENV_INFO with your name.");
+            }
+            if (AppEnvironment.Name == null)
+            {
+                throw new InvalidOperationException("Application name should be not empty");
+            }
+            if (AppEnvironment.Version == null)
+            {
+                throw new InvalidOperationException("Application version should be not empty");
+            }
 
             services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogFactory), typeof(LogFactory)));
 

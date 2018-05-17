@@ -78,11 +78,11 @@ namespace Lykke.Common
             _log = log ?? throw new ArgumentNullException(nameof(log));
 
             if (cpuThreshold.HasValue && cpuThreshold.Value < 0)
-                throw new ArgumentException($"Parameter {nameof(cpuThreshold)} must have non negative value!");
+                throw new ArgumentException($"Parameter {nameof(cpuThreshold)} must have not negative value!");
             _cpuThreshold = cpuThreshold;
 
             if (ramMbThreshold.HasValue && ramMbThreshold.Value < 0)
-                throw new ArgumentException($"Parameter {nameof(ramMbThreshold)} must have non negative value!");
+                throw new ArgumentException($"Parameter {nameof(ramMbThreshold)} must have not negative value!");
             _ramMbThreshold = ramMbThreshold;
 
             _startCpuTime = _process.TotalProcessorTime;

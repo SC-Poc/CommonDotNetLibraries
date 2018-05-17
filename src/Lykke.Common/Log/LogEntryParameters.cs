@@ -15,7 +15,7 @@ namespace Lykke.Common.Log
         [NotNull]
         public string AppVersion { get; }
 
-        [CanBeNull]
+        [NotNull]
         public string EnvInfo { get; }
 
         [NotNull]
@@ -49,7 +49,7 @@ namespace Lykke.Common.Log
         public LogEntryParameters(
             [NotNull] string appName,
             [NotNull] string appVersion, 
-            [CanBeNull] string envInfo,
+            [NotNull] string envInfo,
             [NotNull] string callerFilePath,
             [NotNull] string process, 
             int callerLineNumber,
@@ -59,19 +59,23 @@ namespace Lykke.Common.Log
         {
             if (string.IsNullOrWhiteSpace(appName))
             {
-                throw new ArgumentException("Should be non empty string", nameof(appName));
+                throw new ArgumentException("Should be not empty string", nameof(appName));
             }
             if (string.IsNullOrWhiteSpace(appVersion))
             {
-                throw new ArgumentException("Should be non empty string", nameof(appVersion));
+                throw new ArgumentException("Should be not empty string", nameof(appVersion));
+            }
+            if (string.IsNullOrWhiteSpace(envInfo))
+            {
+                throw new ArgumentException("Should be not empty string", nameof(envInfo));
             }
             if (string.IsNullOrWhiteSpace(callerFilePath))
             {
-                throw new ArgumentException("Should be non empty string", nameof(callerFilePath));
+                throw new ArgumentException("Should be not empty string", nameof(callerFilePath));
             }
             if (string.IsNullOrWhiteSpace(process))
             {
-                throw new ArgumentException("Should be non empty string", nameof(process));
+                throw new ArgumentException("Should be not empty string", nameof(process));
             }
             if (callerLineNumber <= 0)
             {
@@ -79,7 +83,7 @@ namespace Lykke.Common.Log
             }
             if (string.IsNullOrWhiteSpace(message))
             {
-                throw new ArgumentException("Should be non empty string", nameof(message));
+                throw new ArgumentException("Should be not empty string", nameof(message));
             }
 
             AppName = appName;

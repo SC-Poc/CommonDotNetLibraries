@@ -22,7 +22,7 @@ namespace Lykke.Common.Log
             }
             if (string.IsNullOrWhiteSpace(componentNameSuffix))
             {
-                throw new ArgumentException("Should be non empty string", nameof(componentNameSuffix));
+                throw new ArgumentException("Should be not empty string", nameof(componentNameSuffix));
             }
 
             return new Log(_loggerFactory.CreateLogger($"{TypeNameHelper.GetTypeDisplayName(component.GetType())}[{componentNameSuffix}]"));

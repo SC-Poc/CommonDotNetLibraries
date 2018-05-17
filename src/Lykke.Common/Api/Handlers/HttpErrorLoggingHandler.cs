@@ -94,7 +94,7 @@ namespace Lykke.Common.Api.Handlers
                 }
             }
 
-            _log.WriteWarning("HTTP API request ->", CleanupSensitiveInformation(message.ToString()), "Response status is non success");
+            _log.WriteWarning("HTTP API request ->", CleanupSensitiveInformation(message.ToString()), "Response status is non successful");
         }
 
         private async Task LogResponseAsync(HttpResponseMessage response, Guid id)
@@ -125,7 +125,7 @@ namespace Lykke.Common.Api.Handlers
                 }
             }
 
-            _log.WriteWarning("HTTP API response <-", message.ToString(), "Response status is non success");
+            _log.WriteWarning("HTTP API response <-", message.ToString(), "Response status is non successful");
         }
         
         private string CleanupSensitiveInformation(string message)
