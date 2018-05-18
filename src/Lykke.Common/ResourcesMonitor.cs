@@ -93,6 +93,8 @@ namespace Lykke.Common
 
         public override Task Execute()
         {
+            _process.Refresh();
+
             // A very simple and not that accruate evaluation of how much CPU the process is take out of a core.
             double cpuPercentage = (_process.TotalProcessorTime - _startCpuTime).TotalMilliseconds / _cpuWatch.ElapsedMilliseconds;
             ApplicationInsightsTelemetry.TrackMetric(_cpuMetric, cpuPercentage);
