@@ -6,7 +6,8 @@ namespace Lykke.Common.Log
     /// <summary>
     /// Conversion of the log entry context
     /// </summary>
-    internal static class LogContextConversion
+    [PublicAPI]
+    public static class LogContextConversion
     {
         /// <summary>
         /// Converts log entry context to the string
