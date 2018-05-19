@@ -30,7 +30,7 @@ namespace Lykke.Common.Log
         public string Message { get; }
 
         [CanBeNull]
-        public object Context { get; }
+        public string Context { get; }
 
         public DateTime Moment { get; }
 
@@ -93,7 +93,7 @@ namespace Lykke.Common.Log
             Process = process;
             CallerLineNumber = callerLineNumber;
             Message = message;
-            Context = context;
+            Context = LogContextConversion.ConvertToString(context);
             Moment = moment ?? DateTime.UtcNow;
         }
     }
