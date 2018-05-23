@@ -8,18 +8,29 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 
 namespace Lykke.Common.Api.Handlers
 {
+    [PublicAPI]
     public class HttpErrorLoggingHandler : DelegatingHandler
     {
         private readonly ILog _log;
         private readonly List<(string Pattern, string Replacement)> _sensitivePatterns;
 
+        [Obsolete("Use public HttpErrorLoggingHandler(ILogFactory logFactory, HttpMessageHandler innerHandler = null)")]
         public HttpErrorLoggingHandler(ILog log, HttpMessageHandler innerHandler = null)
             : base(innerHandler ?? new HttpClientHandler())
         {
             _log = log;
+            _sensitivePatterns = new List<(string Pattern, string Replacement)>();
+        }
+
+        public HttpErrorLoggingHandler(ILogFactory logFactory, HttpMessageHandler innerHandler = null)
+            : base(innerHandler ?? new HttpClientHandler())
+        {
+            _log = logFactory.CreateLog(this);
             _sensitivePatterns = new List<(string Pattern, string Replacement)>();
         }
 

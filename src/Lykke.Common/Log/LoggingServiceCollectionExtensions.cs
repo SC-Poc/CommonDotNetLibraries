@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Log;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,6 +13,11 @@ namespace Lykke.Common.Log
     [PublicAPI]
     public static class LoggingServiceCollectionExtensions
     {
+        [Obsolete("Should be removed with old logging system")]
+        internal sealed class BackwardCompatibilityLog
+        {
+        }
+
         /// <summary>
         /// Adds Lykke logging services to the specified <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
         /// </summary>
@@ -59,6 +65,7 @@ namespace Lykke.Common.Log
             }
 
             services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogFactory), typeof(LogFactory)));
+            services.TryAdd(ServiceDescriptor.Singleton(typeof(ILog), s => s.GetService<ILogFactory>().CreateLog(new BackwardCompatibilityLog())));
 
             return services.AddLogging(buidler =>
             {

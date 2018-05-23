@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Common.Log;
+﻿using System.Threading.Tasks;
 using Xunit;
 using Common.Tests.Stubs;
+using Lykke.Common.Log;
 
 namespace Common.Tests
 {
@@ -18,8 +15,8 @@ namespace Common.Tests
             // Produce another 3 messages
             // Check that all messages are consumed
             // 
-            var log = new LogToMemory();
-            var pc = new ProducerConsumerStub("component", log);
+            var logFactory = new EmptyLogFactory();
+            var pc = new ProducerConsumerStub("component", logFactory);
 
             pc.ProduceMessage("message 1");
             pc.ProduceMessage("message 2");

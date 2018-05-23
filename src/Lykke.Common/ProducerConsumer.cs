@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Log;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 
 namespace Common
 {
+    [PublicAPI]
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
     {
         private readonly object _startStopLockobject = new object();
@@ -14,22 +17,34 @@ namespace Common
         private readonly bool _isAppInisghtsMetricEnabled;
         private bool _disposed;
 
+        [Obsolete("Use ComponentName")]
         protected readonly string _componentName;
-        
-        protected ILog Log { get; }
+
+        public string ComponentName => _componentName;
+
+        private bool _started;
+        private Task _threadTask;
+        private TaskCompletionSource<T> _last;
+        private readonly ILog _log;
+
+        [Obsolete("Use your own log")]
+        protected ILog Log => _log;
 
         protected abstract Task Consume(T item);
 
+        [Obsolete("Use protected ProducerConsumer([NotNull] string componentName, [NotNull] ILogFactory logFactory, bool enableAppInisghtsMetric = false)")]
         protected ProducerConsumer(string componentName, ILog log)
             : this(componentName, log, false)
         {
         }
 
+        [Obsolete("Use protected ProducerConsumer([NotNull] string componentName, [NotNull] ILogFactory logFactory, bool enableAppInisghtsMetric = false)")]
         protected ProducerConsumer(ILog log)
             : this(null, log, false)
         {
         }
-        
+
+        [Obsolete("Use protected ProducerConsumer([NotNull] string componentName, [NotNull] ILogFactory logFactory, bool enableAppInisghtsMetric = false)")]
         protected ProducerConsumer(
             string componentName,
             ILog log,
@@ -46,12 +61,27 @@ namespace Common
             }
             _isAppInisghtsMetricEnabled = enableAppInisghtsMetric;
             
-            Log = log;
+            _log = log;
         }
 
-        private bool _started;
-        private Task _threadTask;
-        private TaskCompletionSource<T> _last;
+        protected ProducerConsumer(
+            [NotNull] ILogFactory logFactory,
+            [CanBeNull] string componentName = null,
+            bool enableAppInisghtsMetric = false)
+        {
+            if (string.IsNullOrWhiteSpace(componentName))
+            {
+                _metricName = $"ProducerConsumer<{typeof(T).Name}> count";
+            }
+            else
+            {
+                _componentName = componentName;
+                _metricName = $"ProducerConsumer<{typeof(T).Name}> count for {_componentName}";
+            }
+            _isAppInisghtsMetricEnabled = enableAppInisghtsMetric;
+
+            _log = componentName == null ? logFactory.CreateLog(this) : logFactory.CreateLog(this, componentName);
+        }
 
         private TaskCompletionSource<T> Dequeue()
         {
@@ -100,7 +130,7 @@ namespace Common
                     if (string.IsNullOrWhiteSpace(_componentName))
                         await Log.WriteErrorAsync("Handle", "", exception);
                     else
-                        await Log.WriteErrorAsync(_componentName, "Handle", "", exception);
+                        await _log.WriteErrorAsync(ComponentName, "Handle", "", exception);
                 }
             }
             // ReSharper disable once EmptyGeneralCatchClause

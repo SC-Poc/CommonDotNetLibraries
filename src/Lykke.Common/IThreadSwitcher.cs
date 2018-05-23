@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Common;
 using Common.Log;
+using Lykke.Common.Log;
 
 namespace Lykke.Common
 {
@@ -18,9 +19,13 @@ namespace Lykke.Common
 
     public class ThreadSwitcherSingleThread : ProducerConsumer<Func<Task>>, IThreadSwitcher
     {
-
-
+        [Obsolete]
         public ThreadSwitcherSingleThread(ILog log) : base(nameof(ThreadSwitcherSingleThread), log)
+        {
+        }
+
+        public ThreadSwitcherSingleThread(ILogFactory logFactory) : 
+            base(logFactory)
         {
         }
 
@@ -37,8 +42,13 @@ namespace Lykke.Common
 
     public class ThreadSwitcherSingleThread<T> : ProducerConsumer<Tuple<Func<T, Task>, T>>, IThreadSwitcher<T>
     {
-
+        [Obsolete]
         public ThreadSwitcherSingleThread(ILog log) : base(nameof(ThreadSwitcherSingleThread<T>), log)
+        {
+        }
+
+        public ThreadSwitcherSingleThread(ILogFactory logFactory) : 
+            base(logFactory)
         {
         }
 
@@ -57,10 +67,15 @@ namespace Lykke.Common
     {
         private readonly ILog _log;
 
-
+        [Obsolete]
         public ThreadSwitcherToNewTask(ILog log)
         {
             _log = log;
+        }
+
+        public ThreadSwitcherToNewTask(ILogFactory logFactory)
+        {
+            _log = logFactory.CreateLog(this);
         }
 
         public void SwitchThread(Func<Task> otherThread)
@@ -73,7 +88,7 @@ namespace Lykke.Common
                 }
                 catch (Exception ex)
                 {
-                    await _log.WriteFatalErrorAsync(nameof(ThreadSwitcherToNewTask), "SwitchThread", "", ex);
+                    await _log.WriteErrorAsync(nameof(ThreadSwitcherToNewTask), "SwitchThread", "", ex);
                 }
             });
         }
@@ -84,10 +99,15 @@ namespace Lykke.Common
     {
         private readonly ILog _log;
 
-
+        [Obsolete]
         public ThreadSwitcherToNewTask(ILog log)
         {
             _log = log;
+        }
+
+        public ThreadSwitcherToNewTask(ILogFactory logFactory)
+        {
+            _log = logFactory.CreateLog(this);
         }
 
         public void SwitchThread(Func<T,Task> otherThread, T data)
@@ -100,7 +120,7 @@ namespace Lykke.Common
                 }
                 catch (Exception ex)
                 {
-                    await _log.WriteFatalErrorAsync(nameof(ThreadSwitcherToNewTask<T>), "SwitchThread", "", ex);
+                    await _log.WriteErrorAsync(nameof(ThreadSwitcherToNewTask<T>), "SwitchThread", "", ex);
                 }
             });
         }

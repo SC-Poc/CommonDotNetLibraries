@@ -8,10 +8,12 @@ namespace Lykke.Common.Log
     internal sealed class LogFactory : ILogFactory
     {
         private readonly ILoggerFactory _loggerFactory;
+        private readonly IHealthNotifier _healthNotifier;
 
-        public LogFactory(ILoggerFactory loggerFactory)
+        public LogFactory(ILoggerFactory loggerFactory, IHealthNotifier healthNotifier)
         {
             _loggerFactory = loggerFactory;
+            _healthNotifier = healthNotifier;
         }
 
         public ILog CreateLog<TComponent>(TComponent component, string componentNameSuffix)
@@ -25,7 +27,7 @@ namespace Lykke.Common.Log
                 throw new ArgumentException("Should be not empty string", nameof(componentNameSuffix));
             }
 
-            return new Log(_loggerFactory.CreateLogger($"{TypeNameHelper.GetTypeDisplayName(component.GetType())}[{componentNameSuffix}]"));
+            return new Log(_loggerFactory.CreateLogger($"{TypeNameHelper.GetTypeDisplayName(component.GetType())}[{componentNameSuffix}]"), _healthNotifier);
         }
 
         public ILog CreateLog<TComponent>(TComponent component)
@@ -35,7 +37,7 @@ namespace Lykke.Common.Log
                 throw new ArgumentNullException(nameof(component));
             }
 
-            return new Log(_loggerFactory.CreateLogger(TypeNameHelper.GetTypeDisplayName(component.GetType())));
+            return new Log(_loggerFactory.CreateLogger(TypeNameHelper.GetTypeDisplayName(component.GetType())), _healthNotifier);
         }
     }
 }
