@@ -14,7 +14,6 @@ namespace Common
 {
     public static class Utils
     {
-
         private static readonly Dictionary<byte, string> Hex0 = new Dictionary<byte, string>
         {
             {0, "0"},
@@ -87,7 +86,6 @@ namespace Common
             {'f', 240},
         };
 
-
         public const string IsoDateTimeMask = "yyyy-MM-dd HH:mm:ss";
 
         public const string IsoDateMask = "yyyy-MM-dd";
@@ -104,24 +102,23 @@ namespace Common
 
         public static bool Mod10Check(string creditCardNumber)
         {
-            //// check whether input string is null or empty
+            // check whether input string is null or empty
             if (string.IsNullOrEmpty(creditCardNumber))
             {
                 return false;
             }
 
-            //// 1.	Starting with the check digit double the value of every other digit 
-            //// 2.	If doubling of a number results in a two digits number, add up
-            ///   the digits to get a single digit number. This will results in eight single digit numbers                    
-            //// 3. Get the sum of the digits
+            // 1. Starting with the check digit double the value of every other digit 
+            // 2. If doubling of a number results in a two digits number, add up
+            //    the digits to get a single digit number. This will results in eight single digit numbers                    
+            // 3. Get the sum of the digits
             int sumOfDigits = creditCardNumber.Where((e) => e >= '0' && e <= '9')
                 .Reverse()
                 .Select((e, i) => ((int)e - 48) * (i % 2 == 0 ? 1 : 2))
                 .Sum((e) => e / 10 + e % 10);
 
-
-            //// If the final sum is divisible by 10, then the credit card number
-            //   is valid. If it is not divisible by 10, the number is invalid.            
+            // If the final sum is divisible by 10, then the credit card number
+            // is valid. If it is not divisible by 10, the number is invalid.            
             return sumOfDigits % 10 == 0;
         }
 
@@ -146,9 +143,7 @@ namespace Common
             var d0 = src.Length == 1 ? '0' : src[0];
             var d1 = src.Length == 1 ? src[0] : src[1];
 
-
             return (byte)(Decimal0[d0] + Decimal1[d1]);
-
         }
 
         public static byte[] HexToArray(string src)
@@ -163,7 +158,6 @@ namespace Common
                 result[ri++] = HexToByte(src.Substring(i, 2));
 
             return result;
-
         }
 
         public static byte[] GenerateRandomBytes(int length)
@@ -175,12 +169,10 @@ namespace Common
             return result;
         }
 
-
         public static T ParseEnum<T>(this string value)
         {
             return (T)Enum.Parse(typeof(T), value, true);
         }
-
 
         public static T ParseEnum<T>(this string value, T defaultValue)
         {
@@ -198,7 +190,6 @@ namespace Common
         {
             return Enum.GetNames(typeof(T)).Select(ParseEnum<T>);
         }
-
 
         public static string NumberToWords(int number)
         {
@@ -238,6 +229,7 @@ namespace Common
                 "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven",
                 "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
             };
+            
             var tensMap = new[]
                 {"zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
 
@@ -252,7 +244,6 @@ namespace Common
 
             return words;
         }
-
 
         private static readonly Dictionary<int, string> RuDigitsMa = new Dictionary<int, string>
         {
@@ -315,7 +306,6 @@ namespace Common
             {9, " девятьсот"},
         };
 
-
         private static readonly Dictionary<int, string> RuTens = new Dictionary<int, string>
         {
             {2, " двадцать"},
@@ -328,14 +318,11 @@ namespace Common
             {9, " девяносто"},
         };
 
-
-
         private static void WriteMillionsRu(int amount, StringBuilder sb)
         {
             var thous = GenderAmount(amount, " миллион", " миллиона", " миллионов");
             sb.Append(NumberToWordsRus(amount, true) + thous);
         }
-
 
         private static int GenderAmount(int amount)
         {
@@ -346,13 +333,11 @@ namespace Common
                 return (int)(amount * 0.1);
 
             return amount % 10;
-
         }
 
         public static string GenderAmount(int amount, string oneWord, string twoWord, string fiveOrZerosWord)
         {
             var genderAmount = GenderAmount(amount);
-
 
             switch (genderAmount)
             {
@@ -368,6 +353,7 @@ namespace Common
                 case 4:
                     return twoWord;
             }
+            
             return fiveOrZerosWord;
         }
 
@@ -387,7 +373,6 @@ namespace Common
             sb.Append(RuTens[amount]);
         }
 
-
         public static string NumberToWordsRus(int amount, bool ismale)
         {
             if (amount == 0)
@@ -395,49 +380,43 @@ namespace Common
                 return ismale
                     ? RuDigitsMa[amount]
                     : RuDigitsFe[amount];
-
             }
 
             var sb = new StringBuilder();
 
-            var millions = (int)(amount * 0.000001);
+            var millions = (int) (amount * 0.000001);
+
+            if (millions > 0)
             {
-                if (millions > 0)
-                {
-                    WriteMillionsRu(millions, sb);
-                    amount -= millions * 1000000;
-                }
+                WriteMillionsRu(millions, sb);
+                amount -= millions * 1000000;
             }
 
-            var thousants = (int)(amount * 0.001);
+            var thousants = (int) (amount * 0.001);
+
+            if (thousants > 0)
             {
-                if (thousants > 0)
-                {
-                    WriteThousantsRu(thousants, sb);
-                    amount -= thousants * 1000;
-                }
+                WriteThousantsRu(thousants, sb);
+                amount -= thousants * 1000;
             }
 
-            var hundreds = (int)(amount * 0.01);
+            var hundreds = (int) (amount * 0.01);
+            
+            if (hundreds > 0)
             {
-                if (hundreds > 0)
-                {
-                    WriteHoundredsRu(hundreds, sb);
-                    amount -= hundreds * 100;
-                }
+                WriteHoundredsRu(hundreds, sb);
+                amount -= hundreds * 100;
             }
-
 
             if (amount < 20 && amount > 0)
             {
                 sb.Append(ismale
                     ? RuDigitsMa[amount]
                     : RuDigitsFe[amount]);
-
             }
             else
             {
-                var tens = (int)(amount * 0.1);
+                var tens = (int) (amount * 0.1);
                 if (tens > 0)
                 {
                     WriteTensRu(tens, sb);
@@ -449,17 +428,11 @@ namespace Common
                     sb.Append(ismale
                         ? RuDigitsMa[amount]
                         : RuDigitsFe[amount]);
-
                 }
             }
 
             return sb.ToString();
-
         }
-
-
-
-
 
         public static string PutLastSymbol(string src, char symbol)
         {
@@ -500,7 +473,6 @@ namespace Common
             return result.ToString();
         }
 
-
         /// <summary>
         /// Взять следующую дату, указав день недели. Сегодняшняя дата считается
         /// </summary>
@@ -524,6 +496,7 @@ namespace Common
         public static string CombineString(IEnumerable<string> strings, char separator)
         {
             var result = new StringBuilder();
+            
             foreach (var s in strings)
             {
                 if (result.Length > 0)
@@ -541,7 +514,6 @@ namespace Common
 
         public static bool ListsAreSame<T>(T[] oldOne, T[] newOne, Func<T, T, bool> equal)
         {
-
             if (oldOne == null && newOne == null)
                 return true;
 
@@ -550,7 +522,6 @@ namespace Common
 
             if (oldOne != null && newOne == null)
                 return false;
-
 
             if (oldOne.Length != newOne.Length)
                 return false;
@@ -575,36 +546,34 @@ namespace Common
             return Convert.ToBase64String(src);
         }
 
-
         public static string Base64ToString(this string src)
         {
             var bytes = Convert.FromBase64String(src);
             return Encoding.UTF8.GetString(bytes);
         }
 
-
         public static double ParseAnyDouble(this string amount)
         {
             amount = amount.Replace(',', '.');
-            return Double.Parse(amount, CultureInfo.InvariantCulture);
+            return double.Parse(amount, CultureInfo.InvariantCulture);
         }
 
         public static double ParseAnyDoubleOrDefault(this string amount, double defaultValue)
         {
             amount = amount.Replace(',', '.');
-            return Double.TryParse(amount, out double result) ? result : defaultValue;
+            return double.TryParse(amount, out double result) ? result : defaultValue;
         }
 
         public static decimal ParseAnyDecimal(this string amount)
         {
             amount = amount.Replace(',', '.');
-            return Decimal.Parse(amount, CultureInfo.InvariantCulture);
+            return decimal.Parse(amount, CultureInfo.InvariantCulture);
         }
 
         public static decimal ParseAnyDecimalOrDefault(this string amount, decimal defaultValue)
         {
             amount = amount.Replace(',', '.');
-            return Decimal.TryParse(amount, out decimal result) ? result : defaultValue;
+            return decimal.TryParse(amount, out decimal result) ? result : defaultValue;
         }
 
         public static int ParseIntOrDefault(this string amount, int defaultValue)
@@ -654,10 +623,10 @@ namespace Common
             return result;
         }
 
-
         public static Dictionary<TKey, Dictionary<TKey2, TValue>> CloneDoubleDictionary<TKey, TKey2, TValue>(this Dictionary<TKey, Dictionary<TKey2, TValue>> src)
         {
             var result = new Dictionary<TKey, Dictionary<TKey2, TValue>>();
+            
             foreach (var itm1 in src)
             {
                 var subDictionary = new Dictionary<TKey2, TValue>();
@@ -666,9 +635,9 @@ namespace Common
                 foreach (var itm2 in itm1.Value)
                     subDictionary.Add(itm2.Key, itm2.Value);
             }
+            
             return result;
         }
-
 
         public static string GeneratePassword()
         {
@@ -690,7 +659,6 @@ namespace Common
             return src ? (byte)1 : (byte)0;
         }
 
-
         private static readonly Dictionary<Type, Type> SimpleTypes = new Dictionary<Type, Type>
         {
             {typeof(bool), typeof(bool)},
@@ -702,10 +670,8 @@ namespace Common
             {typeof(long), typeof(long)},
             {typeof(ulong), typeof(ulong)},
             {typeof(double), typeof(double)},
-            {typeof(float), typeof(float)},
-
+            {typeof(float), typeof(float)}
         };
-
 
         public static bool IsSimpleType(this Type type)
         {
@@ -722,12 +688,8 @@ namespace Common
 
         public static byte[] ToBytes(this Stream src)
         {
-
-            var memoryStream = src as MemoryStream;
-
-            if (memoryStream != null)
+            if (src is MemoryStream memoryStream)
                 return memoryStream.ToArray();
-
 
             src.Position = 0;
             var result = new MemoryStream();
@@ -738,12 +700,8 @@ namespace Common
 
         public static async Task<byte[]> ToBytesAsync(this Stream src)
         {
-
-            var memoryStream = src as MemoryStream;
-
-            if (memoryStream != null)
+            if (src is MemoryStream memoryStream)
                 return memoryStream.ToArray();
-
 
             var result = new MemoryStream();
             await src.CopyToAsync(result);
@@ -757,12 +715,10 @@ namespace Common
 
         public static Stream ToStream(this byte[] src)
         {
-            if (src == null)
-                return null;
-
-            return new MemoryStream(src) { Position = 0 };
+            return src == null 
+                ? null 
+                : new MemoryStream(src) { Position = 0 };
         }
-
 
         /// <summary>
         /// Проверить то, что последовательность левая начиная от indexOf равна последовательности search
@@ -782,7 +738,6 @@ namespace Common
             return true;
         }
 
-
         public static int IndexOf(this List<byte> src, byte[] search)
         {
             if (search.Length == 0)
@@ -797,7 +752,6 @@ namespace Common
             return -1;
         }
 
-
         [Obsolete("Use MoreLinq " + nameof(MoreEnumerable.Slice) + " extension method")]
         public static IEnumerable<T> CutFrom<T>(this IEnumerable<T> src, int from, int length)
         {
@@ -810,13 +764,12 @@ namespace Common
             return src.Batch(chunkSize);
         }
 
-
         public static IPEndPoint ParseIpEndPoint(this string src)
         {
             var data = src.Split(':');
+            
             if (data.Length < 2)
                 throw new Exception("Invalid endpoint string: " + src);
-
 
             return new IPEndPoint(IPAddress.Parse(data[0]), int.Parse(data[1]));
         }
@@ -825,6 +778,7 @@ namespace Common
         {
             var initialList = initialEnumerable.ToList();
             var newList = new List<T>();
+            
             if (initialList.Count < newSize)
                 throw new ArgumentException("New size should be smaller than initial");
 
@@ -832,6 +786,7 @@ namespace Common
 
             double fractionSum = 0;
             bool itemShouldBeSkipped = false;
+            
             foreach (var item in initialList)
             {
                 fractionSum += fraction;
@@ -866,11 +821,13 @@ namespace Common
             double? maxFrom = null, double? minTo = null, double? maxTo = null)
         {
             var valuesAr = values.ToArray();
+            
             return valuesAr.Select(x => x.Map(minFrom ?? valuesAr.Min(),
                 maxFrom ?? valuesAr.Max(), minTo ?? 0D, maxTo ?? 1D));
         }
 
         private const int PartSize = 1024;
+        
         public static async Task LogPartFromStream(this ILog log, Stream stream, string component,
             string process, Exception ex)
         {
@@ -943,11 +900,11 @@ namespace Common
         public static double? GetChangesInPercents(double firstVal, double secondVal)
         {
             double roundingError = 1E-10;
+            
             if (firstVal < roundingError)
                 return null;
 
             return (secondVal - firstVal) / firstVal * 100;
         }
     }
-
 }

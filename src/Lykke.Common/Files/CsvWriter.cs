@@ -10,7 +10,7 @@ namespace Common.Files
         private readonly Encoding _encoding;
         private readonly StringBuilder _sb = new StringBuilder();
 
-        public string Separator = ";";
+        public const string Separator = ";";
         public CsvWriter():this(Encoding.GetEncoding(1251))
         {
 

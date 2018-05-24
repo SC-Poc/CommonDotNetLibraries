@@ -8,6 +8,7 @@
         /// <inheritdoc />
         public void Meow(object tag, int lineNumber = 0)
         {
+            //it never meows
         }
     }
 }

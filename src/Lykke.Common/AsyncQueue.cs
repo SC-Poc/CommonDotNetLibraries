@@ -21,8 +21,6 @@ namespace Common
 
         public Task<T> DequeueAsync(CancellationToken ct)
         {
-            if (ct == null) throw new ArgumentNullException("ct");
-
             lock (_gate)
             {
                 if (_objectQueue.Count > 0)
