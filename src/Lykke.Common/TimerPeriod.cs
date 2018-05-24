@@ -112,10 +112,11 @@ namespace Common
             }
 
             _cancellation?.Cancel();
-            _cancellation?.Dispose();
-
+            
             _task?.ConfigureAwait(false).GetAwaiter().GetResult();
+
             _task?.Dispose();
+            _cancellation?.Dispose();
 
             _task = null;
             _cancellation = null;

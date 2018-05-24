@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Common.Log;
@@ -15,6 +16,7 @@ namespace Common
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
         private readonly string _metricName;
         private readonly bool _isAppInisghtsMetricEnabled;
+        private CancellationTokenSource _cancellation;
         private bool _disposed;
 
         [Obsolete("Use ComponentName")]
@@ -30,7 +32,16 @@ namespace Common
         [Obsolete("Use your own log")]
         protected ILog Log => _log;
 
-        protected abstract Task Consume(T item);
+        protected virtual Task Consume(T item)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task Consume(T item, CancellationToken cancellationToken)
+        {
+            // ReSharper disable once MethodSupportsCancellation
+            return Consume(item);
+        }
 
         [Obsolete("Use protected ProducerConsumer([NotNull] string componentName, [NotNull] ILogFactory logFactory, bool enableAppInisghtsMetric = false)")]
         protected ProducerConsumer(string componentName, ILog log)
@@ -103,7 +114,7 @@ namespace Common
                         if (value == null)
                             return;
 
-                        await Consume(value);
+                        await Consume(value, _cancellation.Token).ConfigureAwait(false);
                         
                         if (_isAppInisghtsMetricEnabled)
                             ApplicationInsightsTelemetry.TrackMetric(_metricName, _queue.Count);
@@ -168,7 +179,7 @@ namespace Common
                 _started = true;
             }
 
-
+            _cancellation = new CancellationTokenSource();
             _last = new TaskCompletionSource<T>();
             lock (_queue)
                 _queue.Enqueue(_last);
@@ -188,8 +199,12 @@ namespace Common
                 _started = false;
             }
 
+            _cancellation?.Cancel();
+
             _last.SetResult(null);
-            _threadTask.Wait();
+            _threadTask.ConfigureAwait(false).GetAwaiter().GetResult();
+
+            _cancellation?.Dispose();
         }
 
         public void Dispose()
