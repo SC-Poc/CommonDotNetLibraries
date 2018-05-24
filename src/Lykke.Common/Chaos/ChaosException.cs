@@ -7,6 +7,7 @@ namespace Lykke.Common.Chaos
     /// Exception that is thrown, when <see cref="IChaosKitty"/> is meowing
     /// </summary>
     [PublicAPI]
+    [Serializable]
     public class ChaosException : Exception
     {
         /// <summary>

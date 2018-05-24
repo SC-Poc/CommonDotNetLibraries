@@ -86,7 +86,7 @@ namespace Common.Application
             //
             this.Stop();
             this.Persist();
-            this.Dispose();
+            this.DisposeAll();
 
             // Release scope
             _scope.Dispose();
@@ -124,7 +124,7 @@ namespace Common.Application
         /// <summary>
         /// Call all IDisposable.
         /// </summary>
-        private void Dispose()
+        private void DisposeAll()
         {
             var startables = _scope.Resolve<IEnumerable<IDisposable>>();
             foreach (var startable in startables)

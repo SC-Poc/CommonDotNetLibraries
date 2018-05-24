@@ -25,6 +25,7 @@ namespace Common
         private Task _task;
         private CancellationTokenSource _cancellation;
         private bool _isTelemetryDisabled;
+        private bool _disposed;
 
         protected ILog Log { get; private set; }
 
@@ -55,7 +56,7 @@ namespace Common
             return Task.CompletedTask;
         }
 
-        public virtual Task Execute(CancellationToken cancellation)
+        public virtual Task Execute(CancellationToken cancellationToken)
         {
             // ReSharper disable once MethodSupportsCancellation
             return Execute();
@@ -103,10 +104,21 @@ namespace Common
         {
             return _componentName;
         }
-
+        
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed || !disposing)
+                return; 
+            
             Stop();
+            
+            _disposed = true;
         }
 
         [Obsolete("Pass log to the ctor")]

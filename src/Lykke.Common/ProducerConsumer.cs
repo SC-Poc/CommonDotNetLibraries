@@ -12,6 +12,7 @@ namespace Common
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
         private readonly string _metricName;
         private readonly bool _isAppInisghtsMetricEnabled;
+        private bool _disposed;
 
         protected readonly string _componentName;
         
@@ -163,9 +164,18 @@ namespace Common
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed || !disposing)
+                return; 
+            
             Stop();
+            
+            _disposed = true;
         }
     }
-
-
 }

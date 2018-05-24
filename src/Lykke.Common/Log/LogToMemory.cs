@@ -7,7 +7,7 @@ namespace Common.Log
 {
     public static class LogUtils
     {
-        public static readonly string[] GuiHeader =
+        public static string[] GuiHeader => new[]
         {
             "Date Time", "Level", "Component", "Process", "Context", "Type", "Msg"
         };
@@ -18,9 +18,9 @@ namespace Common.Log
         private readonly GuiTableLastData _guiTableLastData = new GuiTableLastData(50, LogUtils.GuiHeader);
         private readonly string _component;
 
-        public GuiTableData TableData { get { return _guiTableLastData.TableData; } }
+        public GuiTableData TableData => _guiTableLastData.TableData;
 
-        public int Count { get { return _guiTableLastData.Count; } }
+        public int Count => _guiTableLastData.Count;
 
         public LogToMemory()
         {
@@ -49,14 +49,14 @@ namespace Common.Log
 
         }
 
-        public Task WriteErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
+        public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            return WriteRecordToMemory("error", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return WriteRecordToMemory("error", component, process, context, exception.GetType().ToString(), exception.GetBaseException().Message, dateTime);
         }
 
-        public Task WriteFatalErrorAsync(string component, string process, string context, Exception type, DateTime? dateTime = null)
+        public Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            return WriteRecordToMemory("fatalerror", component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return WriteRecordToMemory("fatalerror", component, process, context, exception.GetType().ToString(), exception.GetBaseException().Message, dateTime);
         }
 
         public void Clear()
@@ -84,14 +84,14 @@ namespace Common.Log
             return WriteRecordToMemory("warning", _component, process, context, ex.GetType().ToString(), $"{info}: {ex.GetBaseException().Message}", dateTime);
         }
 
-        public Task WriteErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
+        public Task WriteErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            return WriteRecordToMemory("error", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return WriteRecordToMemory("error", _component, process, context, exception.GetType().ToString(), exception.GetBaseException().Message, dateTime);
         }
 
-        public Task WriteFatalErrorAsync(string process, string context, Exception type, DateTime? dateTime = null)
+        public Task WriteFatalErrorAsync(string process, string context, Exception exception, DateTime? dateTime = null)
         {
-            return WriteRecordToMemory("fatalerror", _component, process, context, type.GetType().ToString(), type.GetBaseException().Message, dateTime);
+            return WriteRecordToMemory("fatalerror", _component, process, context, exception.GetType().ToString(), exception.GetBaseException().Message, dateTime);
         }
 
         private Task WriteRecordToMemory(string level, string component, string process,

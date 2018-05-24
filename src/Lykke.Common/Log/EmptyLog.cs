@@ -28,12 +28,12 @@ namespace Common.Log
             return Task.CompletedTask;
         }
 
-        public Task WriteErrorAsync(string component, string process, string context, Exception exeption, DateTime? dateTime = null)
+        public Task WriteErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             return Task.CompletedTask;
         }
 
-        public Task WriteFatalErrorAsync(string component, string process, string context, Exception exeption, DateTime? dateTime = null)
+        public Task WriteFatalErrorAsync(string component, string process, string context, Exception exception, DateTime? dateTime = null)
         {
             return Task.CompletedTask;
         }

@@ -134,7 +134,7 @@ namespace Common.Tests.UtilsClass
                 if (i >= indexTo)
                     yield break;
 
-                if (i >= from && i < indexTo)
+                if (i >= from)
                     yield return itm;
 
                 i++;

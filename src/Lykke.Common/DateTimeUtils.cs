@@ -8,22 +8,9 @@ namespace Common
     {
         public const int SecondsInDay = 86400;
 
+        public const string StandartDateTimeMask = "dd.MM.yy HH:mm:ss";
 
-        public static string StandartDateTimeMask
-        {
-            get
-            {
-                return "dd.MM.yy HH:mm:ss";
-            }
-        }
-
-        public static string StandartDate
-        {
-            get
-            {
-                return "dd/MM/yyyy";
-            }
-        }
+        public const string StandartDate = "dd/MM/yyyy";
 
         [Obsolete("Use RoundToSecond(DateTime)")]
         public static DateTime TruncMiliseconds(this DateTime dateTime)
@@ -51,7 +38,6 @@ namespace Common
 
             if (value.Length < 19)
                 return false;
-
 
             if (!value[0].IsDigit())
                 return false;
@@ -95,23 +81,22 @@ namespace Common
             if (value[13] != ':')
                 return false;
 
-            if (!StringUtils.IsDigit(value[14]))
+            if (!value[14].IsDigit())
                 return false;
 
-            if (!StringUtils.IsDigit(value[15]))
+            if (!value[15].IsDigit())
                 return false;
 
             if (value[16] != ':')
                 return false;
 
-            if (!StringUtils.IsDigit(value[17]))
+            if (!value[17].IsDigit())
                 return false;
 
-            if (!StringUtils.IsDigit(value[18]))
+            if (!value[18].IsDigit())
                 return false;
 
             return true;
-
         }
 
         /// <summary>
@@ -146,7 +131,6 @@ namespace Common
             return new DateTime(dateTime.Year,dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, 0, dateTime.Kind);
         }
 
-
         /// <summary>
         /// Truncates <see cref="DateTime"/> to the <paramref name="min"/> minutes
         /// </summary>
@@ -163,7 +147,6 @@ namespace Common
 
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, part * min, 0, dateTime.Kind);
         }
-
 
         /// <summary>
         /// Truncates <see cref="DateTime"/> to the hours
@@ -237,7 +220,6 @@ namespace Common
             return dateTime.ToString(Utils.IsoDateTimeMask);
         }
 
-
         public static string ToYyyyMmDd(this DateTime dateTime)
         {
             return dateTime.ToString("yyyyMMdd");
@@ -287,12 +269,10 @@ namespace Common
             return result;
         }
 
-
         public static string ToHtmlComponentDate(this DateTime dateTime)
         {
             return dateTime.Day.ToString("00") + "/" + dateTime.Month.ToString("00") + "/" + dateTime.Year;
         }
-
 
         private static DateTime _baseDateTime = new DateTime(1970,1,1);
 

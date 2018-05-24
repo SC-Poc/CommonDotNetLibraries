@@ -169,11 +169,8 @@ namespace Common
                     return src.IndexOfFromEnd(c, i);
             }
 
-
             return -1;
-
         }
-
 
         public static bool IsOnlyDigits(this string data)
         {
@@ -189,7 +186,6 @@ namespace Common
         {
             return new string(s.Where(char.IsLetterOrDigit).ToArray());
         }
-
 
         private static readonly Regex IsGuidRegex =
            new Regex(@"^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$", RegexOptions.Compiled);
@@ -248,7 +244,6 @@ namespace Common
             if (src.Length < 5)
                 return src;
 
-
             if (src[0] == '+')
                 return src.Substring(2, src.Length - 2);
 
@@ -259,22 +254,22 @@ namespace Common
                 return src.Substring(1, src.Length - 1);
 
             return src;
-
         }
+        
         public static string AddFirstSymbolIfNotExists(this string src, char symbol)
         {
             if (string.IsNullOrEmpty(src))
-                return symbol+"";
+                return symbol + "";
 
-            return src[0] == symbol ? src : symbol+src;
+            return src[0] == symbol ? src : symbol + src;
         }
 
         public static string AddLastSymbolIfNotExists(this string src, char symbol)
         {
             if (string.IsNullOrEmpty(src))
-                return ""+symbol;
+                return "" + symbol;
 
-            return src[src.Length - 1] == symbol ? src : src+symbol;
+            return src[src.Length - 1] == symbol ? src : src + symbol;
         }
 
         public static string RemoveLastSymbolIfExists(this string src, char symbol)
@@ -287,22 +282,20 @@ namespace Common
 
         public static string RemoveFirstSymbolIfExists(this string src, char symbol)
         {
-            if (String.IsNullOrEmpty(src))
+            if (string.IsNullOrEmpty(src))
                 return src;
 
             return src[0] == symbol ? src.Substring(1, src.Length - 1) : src;
         }
-
 
         public static string SubstringTillSymbol(this string src, int from, char c)
         {
             var indexOf = src.IndexOf(c);
 
             if (indexOf < 0)
-                return @from == 0 ? src : src.Substring(@from, src.Length - @from);
+                return from == 0 ? src : src.Substring(from, src.Length - from);
 
-
-            return src.Substring(@from, indexOf - @from);
+            return src.Substring(from, indexOf - from);
         }
 
         public static string OneLineViaSeparator(this IEnumerable<string> src, char separator)
@@ -322,12 +315,8 @@ namespace Common
 
         public static string SubstringExt(this string src, int from, int to)
         {
-            return src.Substring(@from, to - @from+1);
+            return src.Substring(from, to - from + 1);
         }
-
-
-
-
 
         /// <summary>
         /// Get Substring between chars
@@ -345,7 +334,7 @@ namespace Common
             for (var i = 0; i <= skipFrames; i++)
             {
                 toIndex++;
-                fromIndex = src.IndexOf(@from, toIndex) + 1;
+                fromIndex = src.IndexOf(from, toIndex) + 1;
 
                 if (fromIndex == 0)
                     return null;
@@ -372,12 +361,11 @@ namespace Common
 
             for (var i = 0; i <= skipCount; i++)
             {
-                fromIndex = src.IndexOf(@from, fromIndex) + 1;
+                fromIndex = src.IndexOf(from, fromIndex) + 1;
 
                 if (fromIndex == 0)
                     return null;
             }
-
 
             return SubstringExt(src, fromIndex, src.Length - 1);
         }
@@ -388,12 +376,11 @@ namespace Common
 
             for (var i = 0; i <= skipCount; i++)
             {
-                fromIndex = src.IndexOf(@from, fromIndex, StringComparison.Ordinal) + @from.Length;
+                fromIndex = src.IndexOf(from, fromIndex, StringComparison.Ordinal) + from.Length;
 
                 if (fromIndex == 0)
                     return null;
             }
-
 
             return SubstringExt(src, fromIndex, src.Length - 1);
         }
@@ -405,17 +392,14 @@ namespace Common
 
         public static Tuple<string, string> GetFirstNameAndLastName(this string src)
         {
-
             if (string.IsNullOrEmpty(src))
                 return new Tuple<string, string>(null, null);
 
             var fl = src.Split(' ');
 
-            if (fl.Length == 1)
-                return new Tuple<string, string>(fl[0], null);
-
-            return new Tuple<string, string>(fl[0], fl[1]);
-
+            return fl.Length == 1 
+                ? new Tuple<string, string>(fl[0], null) 
+                : new Tuple<string, string>(fl[0], fl[1]);
         }
 
         public static string GenerateId()
@@ -423,11 +407,8 @@ namespace Common
             return Guid.NewGuid().ToString().ToLower();
         }
 
-
-
         public static string FirstLetterLowCase(this string src)
         {
-
             if (string.IsNullOrEmpty(src))
                 return src;
 
@@ -437,7 +418,6 @@ namespace Common
                 return src;
 
             return firstLetter + src.Substring(1, src.Length - 1);
-
         }
 
         public static string ToStringViaSeparator<T>(this IEnumerable<T> str, string separator)
@@ -446,10 +426,12 @@ namespace Common
                 return null;
 
             var result = new StringBuilder();
+            
             foreach (var s in str)
             {
                 if (result.Length > 0)
                     result.Append(separator);
+                
                 result.Append(s);
             }
 
@@ -463,7 +445,6 @@ namespace Common
             foreach (var s in str.Split(separator))
                 yield return s;
         }
-
 
         public static string ExtractWebSiteAndPath(this string src)
         {
@@ -486,13 +467,10 @@ namespace Common
 
             var indexTo = src.IndexOf(@"/", indexFrom+2, StringComparison.Ordinal);
 
-            if (indexTo < 0)
-                return src.Substring(indexFrom + 2, src.Length - indexFrom - 2);
-
-
-            return src.Substring(indexFrom + 2, indexTo - indexFrom - 2);
+            return indexTo < 0 
+                ? src.Substring(indexFrom + 2, src.Length - indexFrom - 2) 
+                : src.Substring(indexFrom + 2, indexTo - indexFrom - 2);
         }
-
 
         public static string ExtractWebSiteRoot(this string src)
         {
@@ -505,11 +483,9 @@ namespace Common
 
             var indexTo = src.IndexOf(@"/", indexFrom + 2, StringComparison.Ordinal);
 
-            if (indexTo < 0)
-                return src.Substring(indexFrom + 2, src.Length - indexFrom - 2);
-
-
-            return src.Substring(0, indexTo);
+            return indexTo < 0 
+                ? src.Substring(indexFrom + 2, src.Length - indexFrom - 2) 
+                : src.Substring(0, indexTo);
         }
 
         public static int FindFirstNonSpaceSymbolIndex(this string src, int from = 0)
@@ -526,9 +502,9 @@ namespace Common
 
         public static int IndexOfNotAny(this string src, int startIndex, params char[] symbols)
         {
-            for(var i=startIndex; i< src.Length; i++)
+            for(var i = startIndex; i < src.Length; i++)
             {
-                if (!symbols.Any(c => c==src[i]))
+                if (symbols.All(c => c != src[i]))
                     return i;
             }
 
@@ -540,12 +516,9 @@ namespace Common
             if (src == null)
                 return null;
 
-            if (src.Length < length)
-                return src;
-
-
-            return src.Substring(src.Length - length, length);
-
+            return src.Length < length 
+                ? src 
+                : src.Substring(src.Length - length, length);
         }
 
         public static string PreparePhoneNum(this string phoneNum)

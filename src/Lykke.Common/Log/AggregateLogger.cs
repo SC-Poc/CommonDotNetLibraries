@@ -8,10 +8,9 @@ namespace Common.Log
     /// <summary>
     /// Sends log messages to all specified loggers.
     /// </summary>
-    public class AggregateLogger : 
-        ILog,
-        IStopable
+    public class AggregateLogger : ILog, IStopable
     {
+        private bool _disposed;
         private readonly List<ILog> _logs;
 
         public AggregateLogger(params ILog[] logs) :
@@ -46,10 +45,21 @@ namespace Common.Log
                 stopable.Stop();
             }
         }
-
+        
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed || !disposing)
+                return; 
+            
             Stop();
+            
+            _disposed = true;
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = default(DateTime?))
