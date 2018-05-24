@@ -315,7 +315,7 @@ namespace Common
 
         public static string SubstringExt(this string src, int from, int to)
         {
-            return src.Substring(from, to - from+1);
+            return src.Substring(from, to - from + 1);
         }
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace Lykke.Common.Api.Contract.Responses
 
             foreach (var error in ModelErrors)
             {
-                if (error.Key == null || error.Value == null) 
+                if (error.Key == null || error.Value == null || error.Value.Count == 0) 
                     continue;
                 
                 if (!string.IsNullOrWhiteSpace(error.Key))

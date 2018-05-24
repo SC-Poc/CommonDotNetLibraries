@@ -670,7 +670,7 @@ namespace Common
             {typeof(long), typeof(long)},
             {typeof(ulong), typeof(ulong)},
             {typeof(double), typeof(double)},
-            {typeof(float), typeof(float)}
+            {typeof(float), typeof(float)},
         };
 
         public static bool IsSimpleType(this Type type)

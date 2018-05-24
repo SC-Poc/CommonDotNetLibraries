@@ -10,7 +10,7 @@ namespace Common.Log
     /// </summary>
     public class AggregateLogger : ILog, IStopable
     {
-        bool disposed;
+        private bool _disposed;
         private readonly List<ILog> _logs;
 
         public AggregateLogger(params ILog[] logs) :
@@ -54,12 +54,12 @@ namespace Common.Log
         
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed || !disposing)
+            if (_disposed || !disposing)
                 return; 
             
             Stop();
             
-            disposed = true;
+            _disposed = true;
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = default(DateTime?))

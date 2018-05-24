@@ -12,7 +12,7 @@ namespace Common
         public class QueueItem : IDisposable
         {
             private readonly QueueWithConfirmation<T> _queue;
-            private bool disposed;
+            private bool _disposed;
 
             internal QueueItem(QueueWithConfirmation<T> queue, T item)
             {
@@ -37,13 +37,13 @@ namespace Common
         
             protected virtual void Dispose(bool disposing)
             {
-                if (disposed || !disposing)
+                if (_disposed || !disposing)
                     return; 
             
                 if (!_isComplieted)
                     _queue.Enqueue(Item);
             
-                disposed = true;
+                _disposed = true;
             }
         }
 

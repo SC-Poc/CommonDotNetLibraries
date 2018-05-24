@@ -8,9 +8,9 @@ namespace Common
     {
         public const int SecondsInDay = 86400;
 
-        public static string StandartDateTimeMask => "dd.MM.yy HH:mm:ss";
+        public const string StandartDateTimeMask = "dd.MM.yy HH:mm:ss";
 
-        public static string StandartDate => "dd/MM/yyyy";
+        public const string StandartDate = "dd/MM/yyyy";
 
         [Obsolete("Use RoundToSecond(DateTime)")]
         public static DateTime TruncMiliseconds(this DateTime dateTime)

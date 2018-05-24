@@ -25,7 +25,7 @@ namespace Common
         private Task _task;
         private CancellationTokenSource _cancellation;
         private bool _isTelemetryDisabled;
-        private bool disposed;
+        private bool _disposed;
 
         protected ILog Log { get; private set; }
 
@@ -113,12 +113,12 @@ namespace Common
         
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed || !disposing)
+            if (_disposed || !disposing)
                 return; 
             
             Stop();
             
-            disposed = true;
+            _disposed = true;
         }
 
         [Obsolete("Pass log to the ctor")]

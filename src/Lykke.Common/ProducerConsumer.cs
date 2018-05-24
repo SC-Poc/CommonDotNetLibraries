@@ -12,7 +12,7 @@ namespace Common
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();
         private readonly string _metricName;
         private readonly bool _isAppInisghtsMetricEnabled;
-        private bool disposed;
+        private bool _disposed;
 
         protected readonly string _componentName;
         
@@ -170,12 +170,12 @@ namespace Common
         
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed || !disposing)
+            if (_disposed || !disposing)
                 return; 
             
             Stop();
             
-            disposed = true;
+            _disposed = true;
         }
     }
 }
