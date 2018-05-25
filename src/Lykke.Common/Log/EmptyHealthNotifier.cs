@@ -9,6 +9,8 @@ namespace Lykke.Common.Log
     [PublicAPI]
     public class EmptyHealthNotifier : IHealthNotifier
     {
+        public static IHealthNotifier Instance { get; } = new EmptyHealthNotifier();
+
         public Task NotifyAsync(string healthMessage, object context = null)
         {
             return Task.CompletedTask;
