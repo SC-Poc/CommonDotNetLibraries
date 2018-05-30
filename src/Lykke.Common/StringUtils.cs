@@ -579,24 +579,33 @@ namespace Common
         {
             return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
         }
-        
+
         /// <summary>
         /// Checks password for compexity (must contains digits, upper and lower case chars and special chars)
         /// </summary>
         /// <param name="password">password to check</param>
         /// <param name="minLength">min password length</param>
+        /// <param name="maxLenght">max password lenght</param>
         /// <param name="useSpecialChars">check for special chars or not</param>
+        /// <param name="useCharsSequence">check for chars sequences</param>
+        /// <param name="charsSequence">chars sequences length</param>
         /// <returns></returns>
-        public static bool IsPasswordComplex(this string password, int minLength = 8, bool useSpecialChars = true)
+        public static bool IsPasswordComplex(this string password, int minLength = 10, int maxLenght = 128, bool useSpecialChars = true, bool useCharsSequence = true, uint charsSequence = 3)
         {
-            if (string.IsNullOrEmpty(password) || password.Length < minLength)
+            if (string.IsNullOrEmpty(password) || password.Length < minLength || password.Length > maxLenght)
                 return false;
             
             if (minLength <= 0)
                 throw new ArgumentException($"{nameof(minLength)} must be > 0");
+            
+            if (maxLenght <= 0 || maxLenght < minLength)
+                throw new ArgumentException($"{nameof(maxLenght)} must be > 0 and minLenght");
+            
+            if (useCharsSequence && charsSequence == 1)
+                throw new ArgumentException($"{nameof(charsSequence)} must be > 1");
 
             return password.Any(char.IsDigit) && password.Any(char.IsUpper) && password.Any(char.IsLower)
-                   && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d])."));
+                   && (!useSpecialChars || Regex.IsMatch(password, "(?=.*[^a-zA-Z\\d]).")) && (!useCharsSequence || !password.HasCharsSequence(charsSequence));
         }
         
         /// <summary>
@@ -635,6 +644,29 @@ namespace Common
                     }
                 }
             }
+        }
+        
+        public static bool HasCharsSequence(this string str, uint sequenceLength)
+        {
+            if (string.IsNullOrEmpty(str) || str.Length == 1)
+                return false;
+            
+            char currentChar = str[0];
+            var count = 1;
+
+            foreach(var c in str.Skip(1))
+            {
+                count = currentChar == c 
+                    ? count + 1 
+                    : 1;
+
+                if (count == sequenceLength)
+                    return true;
+
+                currentChar = c;
+            }
+
+            return false;
         }
     }
 
