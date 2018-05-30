@@ -80,91 +80,147 @@ namespace Common.Tests.UtilsClass
             Assert.Equal("3", hash1);
             Assert.Equal("684843D3", hash8);
         }
-        
+
         [Fact]
-        public void Test_IsPasswordComplex()
+        public void Test_IsPasswordComplex_Valid()
         {
-            //complex password: >=10 chars, lower, upper and special chars
             string password = "Qwer12$_@#";
             Assert.True(password.IsPasswordComplex());
-            
-            //complex password: unicode char
-            password = "Qwer!@122┴";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_With_Unicode_Char()
+        {
+            string password = "Qwer!@122┴";
             Assert.True(password.IsPasswordComplex());
-            
-            //complex password: non english chars
-            password = "QwerÄ1223┴";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_With_NonEnglish_Char()
+        {
+            string password = "QwerÄ1223┴";
             Assert.True(password.IsPasswordComplex());
-            
-            //complex password: non english chars
-            password = "сложныйПароль123#!@";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_With_NoEnglish_Char()
+        {
+            string password = "сложныйПароль123#!@";
             Assert.True(password.IsPasswordComplex());
-            
-            //complex password: don't use special chars
-            password = "Qwer123456";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_Disabled_Special_Chars()
+        {
+            string password = "Qwer123456";
             Assert.True(password.IsPasswordComplex(useSpecialChars:false));
-            
-            //complex password: don't use special chars and min length = 4 chars
-            password = "Qwer123456";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_Disabled_Special_Chars_And_Changed_MinLength()
+        {
+            string password = "Qwer123456";
             Assert.True(password.IsPasswordComplex(4, useSpecialChars:false));
-            
-            //complex password: no sequence of same chars >=3
-            password = "Qwer!1223456";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_No_Chars_Sequence()
+        {
+            string password = "Qwer!1223456";
             Assert.True(password.IsPasswordComplex());
-            
-            //complex password: sequence of '2' char < 4 times
-            password = "Qwer!12223456";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_Increased_Chars_Sequence()
+        {
+            string password = "Qwer!12223456";
             Assert.True(password.IsPasswordComplex(charsSequence:4));
-            
-            //complex password: don't use sequence check
-            password = "Qwer!11111";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Valid_Disabled_Chars_Sequence()
+        {
+            string password = "Qwer!11111";
             Assert.True(password.IsPasswordComplex(useCharsSequence:false));
-            
-            //not complex password: no special chars
-            password = "Qwer123456";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: < 10 chars
-            password = "Qwe123$";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: no digits
-            password = "Qwe#@!!_$";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: no upper case chars
-            password = "qwe1#@!!_$";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: no lower case chars
-            password = "QWE1#@!!_$";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: no upper case chars (non english)
-            password = "сложный123#!@";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: no lower case chars (non english)
-            password = "СЛОЖНЫЙ123#!@";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: sequence of '2' char 3 times
-            password = "Qwer!12223456";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: sequence of '!' char > 3 times
-            password = "Qwer!!!!1234";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: sequence of 'Ä' char 3 times
-            password = "QwerÄÄÄ1234";
-            Assert.False(password.IsPasswordComplex());
-            
-            //not complex password: sequence of 'Ä' char 3 times
-            password = "Qwer┴┴┴1234";
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Special_Chars()
+        {
+            string password = "Qwer123456";
             Assert.False(password.IsPasswordComplex());
         }
-
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_Length()
+        {
+            string password = "Qwe123$";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Digits()
+        {
+            string password = "Qwe#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Upper_Case()
+        {
+            string password = "qwe1#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Lower_Case()
+        {
+            string password = "QWE1#@!!_$";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Upper_Case_NonEnglish()
+        {
+            string password = "сложный123#!@";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_No_Lower_Case_NonEnglish()
+        {
+            string password = "СЛОЖНЫЙ123#!@";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_Char_Sequence()
+        {
+            string password = "Qwer!12223456";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_Special_Char_Sequence()
+        {
+            string password = "Qwer!!!!1234";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_NonEnglish_Char_Sequence()
+        {
+            string password = "QwerÄÄÄ1234";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
+        [Fact]
+        public void Test_IsPasswordComplex_Invalid_Unicode_Char_Sequence()
+        {
+            string password = "Qwer┴┴┴1234";
+            Assert.False(password.IsPasswordComplex());
+        }
+        
         [Fact]
         public void Test_SanitizeIp()
         {
