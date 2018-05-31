@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Lykke.Common.Log
@@ -7,7 +8,7 @@ namespace Lykke.Common.Log
     /// Abstraction for app health notifier
     /// </summary>
     [PublicAPI]
-    public interface IHealthNotifier
+    public interface IHealthNotifier : IDisposable
     {
         /// <summary>
         /// Notifies about app health changes, using all required channels
