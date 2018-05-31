@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Lykke.Common.Log
@@ -14,6 +15,11 @@ namespace Lykke.Common.Log
         public Task NotifyAsync(string healthMessage, object context = null)
         {
             return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }
