@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Lykke.Common.Log
@@ -19,7 +18,6 @@ namespace Lykke.Common.Log
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
         }
     }
 }

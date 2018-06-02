@@ -7,13 +7,11 @@ using Microsoft.Extensions.Logging.Abstractions.Internal;
 
 namespace Common.Log
 {
-    // TODO: Since only ILogFactory should be injected in the services, this class should be made internal and sealed when legacy logging system will be removed
-    // TODO: Should be moved to the Lykke.Common.Log namespace, when legacy loggin system will be removed
-
     /// <summary>
-    /// Log that do nothing. Used by the <see cref="EmptyLogFactory"/>
+    /// Log that do nothing
     /// </summary>
     [PublicAPI]
+    [Obsolete("Use Lykke.Logs.EmptyLogFactory.Instance")]
     public class EmptyLog : ILog
     {
         public static EmptyLog Instance { get; } = new EmptyLog();

@@ -6,7 +6,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Common.Log
 {
-    [Obsolete("Use new logging system and call logging.AddConsole() in startup")]
+    [Obsolete("Use new logging system and call logging.AddLykkeConsole() in startup")]
     public class LogToConsole : ILog, IConsole
     {
         private static readonly object ColorSync = new object();

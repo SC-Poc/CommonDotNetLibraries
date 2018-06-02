@@ -54,7 +54,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null, 
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Trace, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Trace, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process ?? throw new ArgumentNullException(nameof(process)), 
+                callerLineNumber, 
+                message, 
+                context,
+                exception, 
+                moment);
         }
 
         /// <summary>
@@ -94,7 +102,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Trace, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Trace, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process, 
+                callerLineNumber, 
+                message, 
+                context, 
+                exception, 
+                moment);
         }
 
         #endregion
@@ -139,7 +155,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Debug, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Debug, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process ?? throw new ArgumentNullException(nameof(process)), 
+                callerLineNumber,
+                message, 
+                context, 
+                exception,
+                moment);
         }
 
         /// <summary>
@@ -178,7 +202,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Debug, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Debug, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process, 
+                callerLineNumber, 
+                message, 
+                context,
+                exception, 
+                moment);
         }
 
         #endregion
@@ -222,7 +254,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Information, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Information, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)),
+                process ?? throw new ArgumentNullException(nameof(process)),
+                callerLineNumber, 
+                message, 
+                context, 
+                exception,
+                moment);
         }
 
         /// <summary>
@@ -260,7 +300,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Information, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Information,
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process, 
+                callerLineNumber, 
+                message, 
+                context,
+                exception, 
+                moment);
         }
 
         #endregion
@@ -305,7 +353,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Warning, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Warning, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process ?? throw new ArgumentNullException(nameof(process)), 
+                callerLineNumber,
+                message, 
+                context,
+                exception,
+                moment);
         }
 
         /// <summary>
@@ -344,7 +400,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Warning, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Warning, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)),
+                process, 
+                callerLineNumber, 
+                message,
+                context, 
+                exception,
+                moment);
         }
 
         #endregion
@@ -389,7 +453,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Error, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Error, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process ?? throw new ArgumentNullException(nameof(process)), 
+                callerLineNumber, 
+                message, 
+                context, 
+                exception,
+                moment);
         }
 
         /// <summary>
@@ -428,7 +500,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Error, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Error, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process, 
+                callerLineNumber,
+                message, 
+                context, 
+                exception, 
+                moment);
         }
 
         #endregion
@@ -473,7 +553,15 @@ namespace Lykke.Common.Log
             [CallerMemberName] string process = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Critical, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Critical, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process ?? throw new ArgumentNullException(nameof(process)),
+                callerLineNumber, 
+                message,
+                context,
+                exception,
+                moment);
         }
 
         /// <summary>
@@ -512,7 +600,15 @@ namespace Lykke.Common.Log
             [CallerFilePath] string callerFilePath = null, 
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            log.Log(LogLevel.Critical, callerFilePath, process, callerLineNumber, message, context, exception, moment);
+            log.Log(
+                LogLevel.Critical, 
+                callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
+                process, 
+                callerLineNumber,
+                message, 
+                context, 
+                exception, 
+                moment);
         }
 
         #endregion
@@ -551,16 +647,37 @@ namespace Lykke.Common.Log
         /// <param name="exception">Exception of the entry</param>
         /// <param name="moment">Moment of the entry. Current momemnt will be used by default.</param>
         public static void Log(
-            this ILog log,
+            [NotNull] this ILog log,
             LogLevel logLevel,
-            string callerFilePath, 
-            string process, 
+            [NotNull] string callerFilePath, 
+            [NotNull] string process, 
             int callerLineNumber, 
-            string message, 
-            object context, 
-            Exception exception, 
-            DateTime? moment)
+            [NotNull] string message, 
+            [CanBeNull] object context, 
+            [CanBeNull] Exception exception, 
+            [CanBeNull] DateTime? moment)
         {
+            if (log == null)
+            {
+                throw new ArgumentNullException(nameof(log));
+            }
+            if (callerFilePath == null)
+            {
+                throw new ArgumentNullException(nameof(callerFilePath));
+            }
+            if (process == null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+            if (callerLineNumber <= 0)
+            {
+                throw new ArgumentException("Should be positive number", nameof(callerLineNumber));
+            }
+            
             log.Log(
                 logLevel,
                 0,

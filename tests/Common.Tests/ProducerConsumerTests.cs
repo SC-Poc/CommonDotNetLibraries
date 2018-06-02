@@ -2,6 +2,7 @@
 using Xunit;
 using Common.Tests.Stubs;
 using Lykke.Common.Log;
+using Moq;
 
 namespace Common.Tests
 {
@@ -15,8 +16,8 @@ namespace Common.Tests
             // Produce another 3 messages
             // Check that all messages are consumed
             // 
-            var logFactory = new EmptyLogFactory();
-            var pc = new ProducerConsumerStub("component", logFactory);
+            var logFactory = new Mock<ILogFactory>();
+            var pc = new ProducerConsumerStub("component", logFactory.Object);
 
             pc.ProduceMessage("message 1");
             pc.ProduceMessage("message 2");
