@@ -675,7 +675,7 @@ namespace Lykke.Common.Log
             }
             if (callerLineNumber <= 0)
             {
-                throw new ArgumentException("Should be positive number", nameof(callerLineNumber));
+                throw new ArgumentOutOfRangeException(nameof(callerLineNumber), callerLineNumber, "Should be positive number");
             }
             
             log.Log(
