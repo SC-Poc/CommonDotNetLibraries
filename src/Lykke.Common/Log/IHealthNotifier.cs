@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace Lykke.Common.Log
@@ -11,10 +10,10 @@ namespace Lykke.Common.Log
     public interface IHealthNotifier : IDisposable
     {
         /// <summary>
-        /// Notifies about app health changes, using all required channels
+        /// Notifies about app health changes
         /// </summary>
         /// <param name="healthMessage">Message that describes app health change</param>
         /// <param name="context">Health change context, if any</param>
-        Task NotifyAsync([NotNull] string healthMessage, [CanBeNull] object context = null);
+        void Notify([NotNull] string healthMessage, [CanBeNull] object context = null);
     }
 }
