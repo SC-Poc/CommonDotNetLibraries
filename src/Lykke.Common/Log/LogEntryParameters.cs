@@ -26,7 +26,7 @@ namespace Lykke.Common.Log
 
         public int CallerLineNumber { get; }
 
-        [NotNull]
+        [CanBeNull]
         public string Message { get; }
 
         [CanBeNull]
@@ -53,7 +53,7 @@ namespace Lykke.Common.Log
             [NotNull] string callerFilePath,
             [NotNull] string process, 
             int callerLineNumber,
-            [NotNull] string message, 
+            [CanBeNull] string message, 
             [CanBeNull] object context, 
             [CanBeNull] DateTime? moment)
         {
@@ -80,10 +80,6 @@ namespace Lykke.Common.Log
             if (callerLineNumber <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(callerLineNumber), callerLineNumber, "Should be positive number");
-            }
-            if (string.IsNullOrWhiteSpace(message))
-            {
-                throw new ArgumentException("Should be not empty string", nameof(message));
             }
 
             AppName = appName;

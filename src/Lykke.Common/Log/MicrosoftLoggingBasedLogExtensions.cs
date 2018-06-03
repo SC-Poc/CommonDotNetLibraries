@@ -58,8 +58,8 @@ namespace Lykke.Common.Log
                 LogLevel.Trace, 
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
                 process ?? throw new ArgumentNullException(nameof(process)), 
-                callerLineNumber, 
-                message, 
+                callerLineNumber,
+                message ?? throw new ArgumentNullException(nameof(message)),
                 context,
                 exception, 
                 moment);
@@ -106,8 +106,8 @@ namespace Lykke.Common.Log
                 LogLevel.Trace, 
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
                 process, 
-                callerLineNumber, 
-                message, 
+                callerLineNumber,
+                message ?? throw new ArgumentNullException(nameof(message)),
                 context, 
                 exception, 
                 moment);
@@ -160,7 +160,7 @@ namespace Lykke.Common.Log
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
                 process ?? throw new ArgumentNullException(nameof(process)), 
                 callerLineNumber,
-                message, 
+                message ?? throw new ArgumentNullException(nameof(message)),
                 context, 
                 exception,
                 moment);
@@ -206,8 +206,8 @@ namespace Lykke.Common.Log
                 LogLevel.Debug, 
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
                 process, 
-                callerLineNumber, 
-                message, 
+                callerLineNumber,
+                message ?? throw new ArgumentNullException(nameof(message)),
                 context,
                 exception, 
                 moment);
@@ -258,8 +258,8 @@ namespace Lykke.Common.Log
                 LogLevel.Information, 
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)),
                 process ?? throw new ArgumentNullException(nameof(process)),
-                callerLineNumber, 
-                message, 
+                callerLineNumber,
+                message ?? throw new ArgumentNullException(nameof(message)),
                 context, 
                 exception,
                 moment);
@@ -305,7 +305,7 @@ namespace Lykke.Common.Log
                 callerFilePath ?? throw new ArgumentNullException(nameof(callerFilePath)), 
                 process, 
                 callerLineNumber, 
-                message, 
+                message ?? throw new ArgumentNullException(nameof(message)), 
                 context,
                 exception, 
                 moment);
@@ -345,7 +345,7 @@ namespace Lykke.Common.Log
         /// </param>
         public static void Warning(
             [NotNull] this ILog log,
-            [NotNull] string message,
+            [CanBeNull] string message = null,
             [CanBeNull] Exception exception = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
@@ -393,7 +393,7 @@ namespace Lykke.Common.Log
         public static void Warning(
             [NotNull] this ILog log,
             [NotNull] string process,
-            [NotNull] string message,
+            [CanBeNull] string message = null,
             [CanBeNull] Exception exception = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
@@ -437,7 +437,7 @@ namespace Lykke.Common.Log
         /// <param name="process">
         /// Name of the method where the entry was made. 
         /// Do not pass argument to this parameter, it will be done by the compiler.
-        /// If you want to specify custom process name, use <see cref="Error(ILog, string, string, Exception, object, DateTime?, string, int)"/> overload
+        /// If you want to specify custom process name, use <see cref="Error(ILog, string, Exception, string, object, DateTime?, string, int)"/> overload
         /// </param>
         /// <param name="callerLineNumber">
         /// Source code file line number, where the entry was made.
@@ -445,8 +445,8 @@ namespace Lykke.Common.Log
         /// </param>
         public static void Error(
             [NotNull] this ILog log,
-            [NotNull] string message,
             [CanBeNull] Exception exception = null,
+            [CanBeNull] string message = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
             [CallerFilePath] string callerFilePath = null,
@@ -476,7 +476,7 @@ namespace Lykke.Common.Log
         /// <param name="log">The log</param>
         /// <param name="process">
         /// Custom name of the process where the entry was made. 
-        /// If you want to use method name as the process name, use <see cref="Error(ILog, string, Exception, object, DateTime?, string, string, int)"/> overload
+        /// If you want to use method name as the process name, use <see cref="Error(ILog, Exception, string, object, DateTime?, string, string, int)"/> overload
         /// </param>
         /// <param name="message">Message of the entry</param>
         /// <param name="context">Context of the entry</param>
@@ -493,8 +493,8 @@ namespace Lykke.Common.Log
         public static void Error(
             [NotNull] this ILog log,
             [NotNull] string process,
-            [NotNull] string message,
             [CanBeNull] Exception exception = null,
+            [CanBeNull] string message = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
             [CallerFilePath] string callerFilePath = null,
@@ -537,7 +537,7 @@ namespace Lykke.Common.Log
         /// <param name="process">
         /// Name of the method where the entry was made. 
         /// Do not pass argument to this parameter, it will be done by the compiler.
-        /// If you want to specify custom process name, use <see cref="Critical(ILog, string, string, Exception, object, DateTime?, string, int)"/> overload
+        /// If you want to specify custom process name, use <see cref="Critical(ILog, string, Exception, string, object, DateTime?, string, int)"/> overload
         /// </param>
         /// <param name="callerLineNumber">
         /// Source code file line number, where the entry was made.
@@ -545,8 +545,8 @@ namespace Lykke.Common.Log
         /// </param>
         public static void Critical(
             [NotNull] this ILog log,
-            [NotNull] string message,
             [CanBeNull] Exception exception = null,
+            [CanBeNull] string message = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
             [CallerFilePath] string callerFilePath = null,
@@ -576,7 +576,7 @@ namespace Lykke.Common.Log
         /// <param name="log">The log</param>
         /// <param name="process">
         /// Custom name of the process where the entry was made. 
-        /// If you want to use method name as the process name, use <see cref="Critical(ILog, string, Exception, object, DateTime?, string, string, int)"/> overload
+        /// If you want to use method name as the process name, use <see cref="Critical(ILog, Exception, string, object, DateTime?, string, string, int)"/> overload
         /// </param>
         /// <param name="message">Message of the entry</param>
         /// <param name="context">Context of the entry</param>
@@ -592,9 +592,9 @@ namespace Lykke.Common.Log
         /// </param>
         public static void Critical(
             [NotNull] this ILog log, 
-            [NotNull] string process, 
-            [NotNull] string message, 
-            [CanBeNull] Exception exception = null, 
+            [NotNull] string process,
+            [CanBeNull] Exception exception = null,
+            [CanBeNull] string message = null,
             [CanBeNull] object context = null, 
             [CanBeNull] DateTime? moment = null,
             [CallerFilePath] string callerFilePath = null, 
@@ -624,8 +624,8 @@ namespace Lykke.Common.Log
         /// <see cref="Debug(ILog, string, object, Exception, DateTime?, string, string, int)"/>,
         /// <see cref="Info(ILog, string, object, Exception, DateTime?, string, string, int)"/>,
         /// <see cref="Warning(ILog, string, Exception, object, DateTime?, string, string, int)"/>,
-        /// <see cref="Error(ILog, string, Exception, object, DateTime?, string, string, int)"/>,
-        /// <see cref="Critical(ILog, string, Exception, object, DateTime?, string, string, int)"/>
+        /// <see cref="Error(ILog, Exception, string, object, DateTime?, string, string, int)"/>,
+        /// <see cref="Critical(ILog, Exception, string, object, DateTime?, string, string, int)"/>
         /// extension methods or they overloads
         /// </summary>
         /// <param name="log">The log</param>
@@ -652,7 +652,7 @@ namespace Lykke.Common.Log
             [NotNull] string callerFilePath, 
             [NotNull] string process, 
             int callerLineNumber, 
-            [NotNull] string message, 
+            [CanBeNull] string message, 
             [CanBeNull] object context, 
             [CanBeNull] Exception exception, 
             [CanBeNull] DateTime? moment)
@@ -661,23 +661,23 @@ namespace Lykke.Common.Log
             {
                 throw new ArgumentNullException(nameof(log));
             }
-            if (callerFilePath == null)
+            if (string.IsNullOrWhiteSpace(callerFilePath))
             {
                 throw new ArgumentNullException(nameof(callerFilePath));
             }
-            if (process == null)
+            if (string.IsNullOrWhiteSpace(process))
             {
                 throw new ArgumentNullException(nameof(process));
-            }
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
             }
             if (callerLineNumber <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(callerLineNumber), callerLineNumber, "Should be positive number");
             }
-            
+            if(string.IsNullOrWhiteSpace(message) && exception == null)
+            {
+                throw new ArgumentException("Either message or exception should be specified at least");
+            }
+
             log.Log(
                 logLevel,
                 0,

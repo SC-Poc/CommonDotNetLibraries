@@ -25,8 +25,8 @@ namespace Common.Log
         /// <see cref="MicrosoftLoggingBasedLogExtensions.Debug(ILog, string, object, Exception, DateTime?, string, string, int)"/>,
         /// <see cref="MicrosoftLoggingBasedLogExtensions.Info(ILog, string, object, Exception, DateTime?, string, string, int)"/>,
         /// <see cref="MicrosoftLoggingBasedLogExtensions.Warning(ILog, string, Exception, object, DateTime?, string, string, int)"/>,
-        /// <see cref="MicrosoftLoggingBasedLogExtensions.Error(ILog, string, Exception, object, DateTime?, string, string, int)"/>,
-        /// <see cref="MicrosoftLoggingBasedLogExtensions.Critical(ILog, string, Exception, object, DateTime?, string, string, int)"/>
+        /// <see cref="MicrosoftLoggingBasedLogExtensions.Error(ILog, Exception, string, object, DateTime?, string, string, int)"/>,
+        /// <see cref="MicrosoftLoggingBasedLogExtensions.Critical(ILog, Exception, string, object, DateTime?, string, string, int)"/>
         /// extension methods or they overloads
         /// </summary>
         /// <typeparam name="TState">Entry state type</typeparam>
