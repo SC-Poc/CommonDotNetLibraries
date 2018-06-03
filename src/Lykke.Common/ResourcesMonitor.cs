@@ -18,7 +18,7 @@ namespace Lykke.Common
         /// </summary>
         /// <param name="builder">The DI container builder</param>
         /// <param name="log">ILog logger</param>
-        [Obsolete("Use public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder, ILogFactory logFactory)")]
+        [Obsolete("Use public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder)")]
         public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder, ILog log)
         {
             builder.Register(c => new ResourcesMonitor(log))
@@ -31,10 +31,9 @@ namespace Lykke.Common
         /// Registers <see cref="ResourcesMonitor"/> singleton with ApplicationInsights telemetry submission only"/>
         /// </summary>
         /// <param name="builder">The DI container builder</param>
-        /// <param name="logFactory">Log factory</param>
-        public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder, ILogFactory logFactory)
+        public static void RegisterResourcesMonitoring([NotNull] this ContainerBuilder builder)
         {
-            builder.Register(c => new ResourcesMonitor(logFactory))
+            builder.Register(c => new ResourcesMonitor(c.Resolve<ILogFactory>()))
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
@@ -47,9 +46,24 @@ namespace Lykke.Common
         /// <param name="log">ILog logger</param>
         /// <param name="cpuThreshold">Optional CPU threshold for monitor logging</param>
         /// <param name="ramMbThreshold">Optional RAM threshold for monitor logging</param>
+        [Obsolete("Use RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, double? cpuThreshold, int? ramMbThreshold)")]
         public static void RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, ILog log, double? cpuThreshold, int? ramMbThreshold)
         {
             builder.Register(c => new ResourcesMonitor(log, cpuThreshold, ramMbThreshold))
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance();
+        }
+
+        /// <summary>
+        /// Registers <see cref="ResourcesMonitor"/> singleton that beside ApplicationInsights telemetry submission also logs threshold crossing events on monitor level"/>
+        /// </summary>
+        /// <param name="builder">The DI container builder</param>
+        /// <param name="cpuThreshold">Optional CPU threshold for monitor logging</param>
+        /// <param name="ramMbThreshold">Optional RAM threshold for monitor logging</param>
+        public static void RegisterResourcesMonitoringWithLogging([NotNull] this ContainerBuilder builder, double? cpuThreshold, int? ramMbThreshold)
+        {
+            builder.Register(c => new ResourcesMonitor(c.Resolve<ILogFactory>(), cpuThreshold, ramMbThreshold))
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance();
