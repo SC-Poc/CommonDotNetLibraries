@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using AsyncFriendlyStackTrace;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -19,7 +20,9 @@ namespace Lykke.Common.Log
             {
                 Formatting = Formatting.Indented,
                 NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                Culture = CultureInfo.InvariantCulture
             };
         }
 

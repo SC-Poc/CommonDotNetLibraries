@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
 
 namespace Common.Log
 {
@@ -103,12 +104,7 @@ namespace Common.Log
 
         private static string GetContextString(object context)
         {
-            if (context is string str)
-            {
-                return str;
-            }
-
-            return context?.ToJson();
+            return LogContextConversion.ConvertToString(context);
         }
     }
 }
