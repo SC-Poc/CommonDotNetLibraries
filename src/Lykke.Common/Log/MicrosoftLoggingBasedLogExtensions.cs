@@ -345,7 +345,7 @@ namespace Lykke.Common.Log
         /// </param>
         public static void Warning(
             [NotNull] this ILog log,
-            [CanBeNull] string message = null,
+            [CanBeNull] string message,
             [CanBeNull] Exception exception = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
@@ -393,7 +393,7 @@ namespace Lykke.Common.Log
         public static void Warning(
             [NotNull] this ILog log,
             [NotNull] string process,
-            [CanBeNull] string message = null,
+            [CanBeNull] string message,
             [CanBeNull] Exception exception = null,
             [CanBeNull] object context = null,
             [CanBeNull] DateTime? moment = null,
