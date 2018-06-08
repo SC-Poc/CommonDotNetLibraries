@@ -572,6 +572,9 @@ namespace Common
         
         public static bool IsValidPartitionOrRowKey(this string src)
         {
+            if (string.IsNullOrWhiteSpace(src))
+                return false;
+            
             return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]");
         }
         
