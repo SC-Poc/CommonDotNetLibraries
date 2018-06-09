@@ -9,6 +9,10 @@ using Lykke.Common.Log;
 
 namespace Common
 {
+    /// <summary>
+    /// Producer-consumer pattern implementation.
+    /// </summary>
+    /// <typeparam name="T">Item type to produce and consume</typeparam>
     [PublicAPI]
     public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
     {
@@ -32,11 +36,17 @@ namespace Common
         [Obsolete("Use your own log")]
         protected ILog Log => _log;
 
+        /// <summary>
+        /// Override this method to consume next item
+        /// </summary>
         protected virtual Task Consume(T item)
         {
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Override this method to consume next item with possibility to interrupt execution using cancellationToken
+        /// </summary>
         protected virtual Task Consume(T item, CancellationToken cancellationToken)
         {
             // ReSharper disable once MethodSupportsCancellation
@@ -150,6 +160,9 @@ namespace Common
             }
         }
 
+        /// <summary>
+        /// Produces next item. If producer-consumer is not started yet, then it will be started automatically
+        /// </summary>
         protected void Produce(T item)
         {
             Start();
@@ -166,6 +179,9 @@ namespace Common
 
         }
 
+        /// <summary>
+        /// Starts producer-consumer
+        /// </summary>
         public virtual void Start()
         {
             if (_started)
@@ -187,6 +203,9 @@ namespace Common
             _threadTask = StartTask();
         }
 
+        /// <summary>
+        /// Stops producer-consumer. Synchronously waits until produced items queue became empty
+        /// </summary>
         public virtual void Stop()
         {
             if (!_started)

@@ -13,6 +13,9 @@ using Lykke.Common.Log;
 
 namespace Lykke.Common.Api.Handlers
 {
+    /// <summary>
+    /// HTTP message delegating handler, that logs error request and response with url, headers and body
+    /// </summary>
     [PublicAPI]
     public class HttpErrorLoggingHandler : DelegatingHandler
     {
@@ -27,6 +30,11 @@ namespace Lykke.Common.Api.Handlers
             _sensitivePatterns = new List<(string Pattern, string Replacement)>();
         }
 
+        /// <summary>
+        /// Creates <see cref="HttpErrorLoggingHandler"/>
+        /// </summary>
+        /// <param name="logFactory">Log factory</param>
+        /// <param name="innerHandler">Next handler in the chain of responsibility</param>
         public HttpErrorLoggingHandler(ILogFactory logFactory, HttpMessageHandler innerHandler = null)
             : base(innerHandler ?? new HttpClientHandler())
         {
