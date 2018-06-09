@@ -1,4 +1,5 @@
-﻿using Common.Log;
+﻿using System;
+using Common.Log;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +10,7 @@ namespace Lykke.Common.Log
     /// Inject this interface into your class, if you need something to log.
     /// </summary>
     [PublicAPI]
-    public interface ILogFactory
+    public interface ILogFactory : IDisposable
     {
         /// <summary>
         /// Creates the log for the component.
