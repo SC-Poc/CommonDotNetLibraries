@@ -1,5 +1,6 @@
 ﻿using Common.Log;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Logging;
 
 namespace Lykke.Common.Log
 {
@@ -30,5 +31,11 @@ namespace Lykke.Common.Log
         /// <param name="component">Component instance. Just pass <see langword="this"/>.</param>
         [NotNull]
         ILog CreateLog<TComponent>([NotNull] TComponent component);
+
+        /// <summary>
+        /// Adds an <see cref="T:Microsoft.Extensions.Logging.ILoggerProvider" /> to the logging system.
+        /// </summary>
+        /// <param name="provider">The <see cref="T:Microsoft.Extensions.Logging.ILoggerProvider" />.</param>
+        void AddProvider(ILoggerProvider provider);
     }
 }
