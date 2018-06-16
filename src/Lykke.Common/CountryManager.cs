@@ -574,11 +574,17 @@ namespace Common
 
         public static bool HasIso3(string iso3Id)
         {
-            return CountryIso3ToIso2Links.ContainsKey(iso3Id);
+            if (string.IsNullOrEmpty(iso3Id))
+                return false;
+
+            return CountryIso2ToIso3Links.ContainsKey(iso3Id);
         }
 
         public static bool HasIso2(string iso2Id)
         {
+            if (string.IsNullOrEmpty(iso2Id))
+                return false;
+
             return CountryIso2ToIso3Links.ContainsKey(iso2Id);
         }
 
@@ -594,12 +600,18 @@ namespace Common
 
         public static string Iso3ToIso2(string iso3)
         {
-            return CountryIso3ToIso2Links[iso3];
+            if (string.IsNullOrEmpty(iso3))
+                return string.Empty;
+
+            return CountryIso3ToIso2Links.TryGetValue(iso3, out var iso2) ? iso2 : string.Empty;
         }
 
         public static string Iso2ToIso3(string iso2)
         {
-            return CountryIso2ToIso3Links.ContainsKey(iso2) ? CountryIso2ToIso3Links[iso2] : iso2;
+            if (string.IsNullOrEmpty(iso2))
+                return string.Empty;
+
+            return CountryIso2ToIso3Links.TryGetValue(iso2, out var iso3) ? iso3 : string.Empty;
         }
 
         /// <summary>
@@ -617,6 +629,9 @@ namespace Common
         /// </example>
         public static string GetCountryNameByIso3(string iso3)
         {
+            if (string.IsNullOrEmpty(iso3))
+                return string.Empty;
+
             return CountryIso3ToNameLinks.TryGetValue(iso3, out var name) ? name : string.Empty;
         }
 
@@ -635,6 +650,9 @@ namespace Common
         /// </example>
         public static string GetCountryNameByIso2(string iso2)
         {
+            if (string.IsNullOrEmpty(iso2))
+                return string.Empty;
+
             return GetCountryNameByIso3(Iso2ToIso3(iso2));
         }
 
