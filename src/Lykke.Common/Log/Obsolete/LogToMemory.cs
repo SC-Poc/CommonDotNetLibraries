@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.PlatformAbstractions;
 using Common.RemoteUi;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Log
 {
@@ -13,6 +14,7 @@ namespace Common.Log
         };
     }
 
+    [Obsolete("Use new logging system and call logging.AddGuiTable() in startup")]
     public class LogToMemory : ILog, IGuiTable
     {
         private readonly GuiTableLastData _guiTableLastData = new GuiTableLastData(50, LogUtils.GuiHeader);
@@ -26,6 +28,21 @@ namespace Common.Log
         {
             var app = PlatformServices.Default.Application;
             _component = $"{app.ApplicationName} {app.ApplicationVersion}";
+        }
+
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool ILog.IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        IDisposable ILog.BeginScope(string scopeMessage)
+        {
+            throw new NotImplementedException();
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)

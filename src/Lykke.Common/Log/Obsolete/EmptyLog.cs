@@ -1,11 +1,36 @@
 ﻿using System;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions.Internal;
 
 namespace Common.Log
 {
+    /// <summary>
+    /// Log that do nothing
+    /// </summary>
+    [PublicAPI]
+    [Obsolete("Use Lykke.Logs.EmptyLogFactory.Instance")]
     public class EmptyLog : ILog
     {
         public static EmptyLog Instance { get; } = new EmptyLog();
+
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+        }
+
+        bool ILog.IsEnabled(LogLevel logLevel)
+        {
+            return false;
+        }
+
+        IDisposable ILog.BeginScope(string scopeMessage)
+        {
+            return NullScope.Instance;
+        }
+
+        #region Obsolete methods
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = null)
         {
@@ -67,5 +92,7 @@ namespace Common.Log
         {
             return Task.CompletedTask;
         }
+
+        #endregion
     }
 }

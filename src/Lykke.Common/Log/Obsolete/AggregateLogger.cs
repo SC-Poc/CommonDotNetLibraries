@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Log
 {
     /// <summary>
     /// Sends log messages to all specified loggers.
     /// </summary>
-    public class AggregateLogger : ILog, IStopable
+    [Obsolete("Use new Lykke.Common.Log.ILogFactory")]
+    public class AggregateLogger : 
+        ILog,
+        IStopable
     {
         private bool _disposed;
         private readonly List<ILog> _logs;
@@ -60,6 +64,21 @@ namespace Common.Log
             Stop();
             
             _disposed = true;
+        }
+
+        void ILog.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool ILog.IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        IDisposable ILog.BeginScope(string scopeMessage)
+        {
+            throw new NotImplementedException();
         }
 
         public Task WriteInfoAsync(string component, string process, string context, string info, DateTime? dateTime = default(DateTime?))

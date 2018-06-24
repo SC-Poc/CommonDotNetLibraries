@@ -5,6 +5,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Autofac;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
 
 namespace Common
 {
@@ -16,6 +17,7 @@ namespace Common
     /// <summary>
     /// Timer that runs Execute method in a loop with a fixed time interval between runs (Execute method execution time is not included).
     /// </summary>
+    [PublicAPI]
     public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
     {
         private readonly string _componentName;
@@ -25,12 +27,15 @@ namespace Common
         private Task _task;
         private CancellationTokenSource _cancellation;
         private bool _isTelemetryDisabled;
+        private ILog _log;
         private bool _disposed;
 
-        protected ILog Log { get; private set; }
+        [Obsolete("Use your own log")]
+        protected ILog Log => _log;
 
         public bool Working { get; private set; }
 
+        [Obsolete("Use protected TimerPeriod([NotNull] string componentName, int period, ILogFactory logFactory)")]
         protected TimerPeriod(
             [CanBeNull] string componentName, 
             int periodMs, 
@@ -40,15 +45,33 @@ namespace Common
             _periodMs = periodMs;
             _typeName = GetType().Name;
 
-            Log = log?.CreateComponentScope(_componentName);
+            _log = log?.CreateComponentScope(_componentName);
         }
 
+        [Obsolete("Use protected TimerPeriod([NotNull] string componentName, int period, ILogFactory logFactory)")]
         protected TimerPeriod(
-            int periodMs, 
+            int periodMs,
             ILog log) :
 
             this(null, periodMs, log)
         {
+        }
+
+        protected TimerPeriod(
+            TimeSpan period,
+            [NotNull] ILogFactory logFactory,
+            [CanBeNull] string componentName = null)
+        {
+            if (logFactory == null)
+            {
+                throw new ArgumentNullException(nameof(logFactory));
+            }
+
+            _componentName = componentName;
+            _periodMs = (int)period.TotalMilliseconds;
+            _typeName = GetType().Name;
+
+            _log = componentName == null ? logFactory.CreateLog(this) : logFactory.CreateLog(this, componentName);
         }
 
         public virtual Task Execute()
@@ -89,10 +112,11 @@ namespace Common
             }
 
             _cancellation?.Cancel();
-            _cancellation?.Dispose();
-
+            
             _task?.ConfigureAwait(false).GetAwaiter().GetResult();
+
             _task?.Dispose();
+            _cancellation?.Dispose();
 
             _task = null;
             _cancellation = null;
@@ -124,7 +148,7 @@ namespace Common
         [Obsolete("Pass log to the ctor")]
         protected void SetLogger(ILog log)
         {
-            Log = log?.CreateComponentScope(_componentName);
+            _log = log?.CreateComponentScope(_componentName);
         }
 
         protected void DisableTelemetry()
@@ -136,7 +160,7 @@ namespace Common
         {
             try
             {
-                Log.WriteError("Loop", "", exception);
+                _log.WriteError("Loop", "", exception);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch

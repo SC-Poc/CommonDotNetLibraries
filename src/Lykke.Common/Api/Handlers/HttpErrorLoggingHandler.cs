@@ -8,18 +8,37 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Log;
+using JetBrains.Annotations;
+using Lykke.Common.Log;
 
 namespace Lykke.Common.Api.Handlers
 {
+    /// <summary>
+    /// HTTP message delegating handler, that logs error request and response with url, headers and body
+    /// </summary>
+    [PublicAPI]
     public class HttpErrorLoggingHandler : DelegatingHandler
     {
         private readonly ILog _log;
         private readonly List<(string Pattern, string Replacement)> _sensitivePatterns;
 
+        [Obsolete("Use public HttpErrorLoggingHandler(ILogFactory logFactory, HttpMessageHandler innerHandler = null)")]
         public HttpErrorLoggingHandler(ILog log, HttpMessageHandler innerHandler = null)
             : base(innerHandler ?? new HttpClientHandler())
         {
             _log = log;
+            _sensitivePatterns = new List<(string Pattern, string Replacement)>();
+        }
+
+        /// <summary>
+        /// Creates <see cref="HttpErrorLoggingHandler"/>
+        /// </summary>
+        /// <param name="logFactory">Log factory</param>
+        /// <param name="innerHandler">Next handler in the chain of responsibility</param>
+        public HttpErrorLoggingHandler(ILogFactory logFactory, HttpMessageHandler innerHandler = null)
+            : base(innerHandler ?? new HttpClientHandler())
+        {
+            _log = logFactory.CreateLog(this);
             _sensitivePatterns = new List<(string Pattern, string Replacement)>();
         }
 
@@ -94,7 +113,7 @@ namespace Lykke.Common.Api.Handlers
                 }
             }
 
-            _log.WriteWarning("HTTP API request ->", CleanupSensitiveInformation(message.ToString()), "Response status is non success");
+            _log.WriteWarning("HTTP API request ->", CleanupSensitiveInformation(message.ToString()), "Response status is non successful");
         }
 
         private async Task LogResponseAsync(HttpResponseMessage response, Guid id)
@@ -125,7 +144,7 @@ namespace Lykke.Common.Api.Handlers
                 }
             }
 
-            _log.WriteWarning("HTTP API response <-", message.ToString(), "Response status is non success");
+            _log.WriteWarning("HTTP API response <-", message.ToString(), "Response status is non successful");
         }
         
         private string CleanupSensitiveInformation(string message)

@@ -173,6 +173,11 @@ namespace Common.RemoteUi
         /// <param name="headers"></param>
         public GuiTableLastData(int maxCount, params string[] headers)
         {
+            if (maxCount < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(maxCount), maxCount, "maxCount should be a positive number");
+            }
+
             _maxCount = maxCount;
 
             if (headers == null)

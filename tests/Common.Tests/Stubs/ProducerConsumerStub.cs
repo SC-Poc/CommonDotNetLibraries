@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Log;
+using Lykke.Common.Log;
 
 namespace Common.Tests.Stubs
 {
@@ -13,8 +13,8 @@ namespace Common.Tests.Stubs
 
         public IReadOnlyList<string> Consumed => _consumed;
 
-        public ProducerConsumerStub(string componentName, ILog log)
-            : base(componentName, log)
+        public ProducerConsumerStub(string componentName, ILogFactory logFactory)
+            : base(logFactory, componentName)
         {
         }
 
