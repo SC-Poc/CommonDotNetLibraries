@@ -2,6 +2,7 @@
 using System.Globalization;
 using AsyncFriendlyStackTrace;
 using JetBrains.Annotations;
+using Lykke.Common.Log.Converters;
 using Newtonsoft.Json;
 
 namespace Lykke.Common.Log
@@ -24,6 +25,9 @@ namespace Lykke.Common.Log
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc,
                 Culture = CultureInfo.InvariantCulture
             };
+            
+            SerializerSettings.Converters.Add(new IPAddressConverter());
+            SerializerSettings.Converters.Add(new IPEndPointConverter());
         }
 
         /// <summary>
