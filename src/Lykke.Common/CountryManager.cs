@@ -577,7 +577,7 @@ namespace Common
             if (string.IsNullOrEmpty(iso3Id))
                 return false;
 
-            return CountryIso2ToIso3Links.ContainsKey(iso3Id);
+            return CountryIso3ToIso2Links.ContainsKey(iso3Id);
         }
 
         public static bool HasIso2(string iso2Id)
