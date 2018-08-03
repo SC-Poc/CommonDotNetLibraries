@@ -12,6 +12,9 @@ namespace Common
     [PublicAPI]
     public static class StringUtils
     {
+        // Is needed for TrimAllSpacesAroundNullSafe()
+        private static readonly char[] SpaceCharsArray = { ' ', '\t', '\n', '\r'};
+
         /// <summary>
         /// Calculates string 64 bit hash
         /// </summary>
@@ -670,6 +673,18 @@ namespace Common
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Returns a string without space characters at the begining and at the end. May be safely applied to null value input. Chars to remove are: ' ', '\t', '\n', '\r'.
+        /// </summary>
+        /// <param name="value">The input string. May be null.</param>
+        /// <returns>The trimmed string if not-null was given and an empty string otherwise.</returns>
+        public static string TrimAllSpacesAroundNullSafe(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value)
+                ? string.Empty
+                : value.Trim(SpaceCharsArray);
         }
     }
 
