@@ -242,5 +242,34 @@ namespace Common.Tests.UtilsClass
             ip = "192.168.1.100";
             Assert.Equal("192.168.1.0", ip.SanitizeIp());
         }
+
+        [Fact]
+        public void Test_TrimAllSpacesAroundNullSafe()
+        {
+            // Arrange
+            string[] corruptedStrings =
+            {
+                "       \takbjviu\n\n\n\r\t     ",
+                "  \t\t         \n\r \r   ukanegvi",
+                "jbhver,u\n\n\n\r\t         \t       \n",
+                "iuqgbvb",
+                "bav    \r\n   \t    ubvrubv",
+                null
+            };
+
+            string[] correctedStrings =
+            {
+                "akbjviu",
+                "ukanegvi",
+                "jbhver,u",
+                "iuqgbvb",
+                "bav    \r\n   \t    ubvrubv",
+                string.Empty
+            };
+
+            // Act & Assert
+            for (var i = 0; i < corruptedStrings.Length; i++)
+                Assert.Equal(corruptedStrings[i].TrimAllSpacesAroundNullSafe(), correctedStrings[i]);
+        }
     }
 }
