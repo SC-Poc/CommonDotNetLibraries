@@ -149,7 +149,7 @@ namespace Common
         public static byte[] HexToArray(string src)
         {
             if (src.Length % 2 != 0)
-                throw new Exception("Дилна строки [" + src + "] не делится нацело на 2");
+                throw new Exception("The length of the input string [" + src + "] is not a multiple of 2.");
 
             var result = new byte[src.Length / 2];
             int ri = 0;
@@ -474,11 +474,10 @@ namespace Common
         }
 
         /// <summary>
-        /// Взять следующую дату, указав день недели. Сегодняшняя дата считается
+        /// Get the nearest date (in future) for the specified day of week, counting from the current date.
         /// </summary>
-        /// <param name="nowDateTime">текущая дата</param>
-        /// <param name="dayOfWeek">день недели</param>
-        /// <returns>Дата дня недели</returns>
+        /// <param name="nowDateTime">The current date.</param>
+        /// <param name="dayOfWeek">The target day of week.</param>
         public static DateTime GetNextDateByDayOfTheWeek(DateTime nowDateTime, DayOfWeek dayOfWeek)
         {
             var days = (int)dayOfWeek - (int)nowDateTime.DayOfWeek;
@@ -721,9 +720,11 @@ namespace Common
         }
 
         /// <summary>
-        /// Проверить то, что последовательность левая начиная от indexOf равна последовательности search
+        /// Check the equality of two sequences starting from the specified index of the first.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="src">The string where to search.</param>
+        /// <param name="search">The string which to look for.</param>
+        /// <param name="indexOf">The index in src string to start searching from.</param>
         public static bool AreSame(List<byte> src, byte[] search, int indexOf)
         {
             if (search.Length > src.Count - indexOf)
