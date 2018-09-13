@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Lykke.Common
 {
-    public static class CountryPhoneCodes
+    public class CountryPhoneCodes
     {
+        protected IEnumerable<CountryItem> _countries;
+        public CountryPhoneCodes()
+        {
+            _countries = InitCountries();
+        }
+        public IEnumerable<CountryItem> GetCountries()
+        {
+            return _countries;
+        }
         public static DateTime LastModified => new DateTime(2017, 12, 28);
 
-        public static IEnumerable<CountryItem> GetCountries()
+        protected IEnumerable<CountryItem> InitCountries()
         {
             return new[]
             {
@@ -258,12 +266,5 @@ namespace Lykke.Common
                 new CountryItem {Id = "ZWE", Iso2 = "ZW", Name = "Zimbabwe", Prefix = "+263"}
             };
         }
-    }
-    public class CountryItem
-    {
-        public string Id { get; set; }
-        public string Iso2 { get; set; }
-        public string Name { get; set; }
-        public string Prefix { get; set; }
     }
 }
