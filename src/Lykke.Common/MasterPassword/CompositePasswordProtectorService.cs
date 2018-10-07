@@ -35,7 +35,7 @@ namespace Lykke.Common.MasterPassword
         public CompositePasswordProtectorService(IPasswordValidationHashRepository passwordValidationHashRepository,
             IDataProtector dataProtector, uint partsCount)
         {
-            if (partsCount < 1)
+            if (partsCount <= 1)
             {
                 throw new ArgumentException("Parts count should be greater than 1", nameof(partsCount));
             } 
