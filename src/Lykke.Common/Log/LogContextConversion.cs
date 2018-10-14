@@ -3,6 +3,7 @@ using System.Globalization;
 using AsyncFriendlyStackTrace;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Lykke.Common.Log
 {
@@ -22,7 +23,13 @@ namespace Lykke.Common.Log
                 NullValueHandling = NullValueHandling.Include,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                Culture = CultureInfo.InvariantCulture
+                Culture = CultureInfo.InvariantCulture,
+                Converters =
+                {
+                    new StringEnumConverter(),
+                    new VersionConverter(),
+                    new IsoDateTimeConverter()
+                }
             };
         }
 
