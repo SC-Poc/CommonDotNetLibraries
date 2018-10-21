@@ -12,6 +12,8 @@ namespace Common
     [PublicAPI]
     public static class StringUtils
     {
+        private static readonly string AzureInvalidSymbolsPattern = @"[\p{C}|/|\\|#|?]";
+
         // Is needed for TrimAllSpacesAroundNullSafe()
         private static readonly char[] SpaceCharsArray = { ' ', '\t', '\n', '\r'};
 
@@ -578,9 +580,24 @@ namespace Common
             if (string.IsNullOrWhiteSpace(src))
                 return false;
             
-            return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]");
+            return !Regex.IsMatch(src, AzureInvalidSymbolsPattern);
         }
-        
+
+        public static string RefinePartitionOrRowKey(this string src, string replaceStr = "_")
+        {
+            return new Regex(AzureInvalidSymbolsPattern).Replace(src, replaceStr);
+        }
+
+        public static string EnsurePartitionOrRowKeyValid(this string src)
+        {
+            if (!src.IsValidPartitionOrRowKey())
+            {
+                return src.RefinePartitionOrRowKey();
+            }
+
+            return src;
+        }
+
         public static bool IsValidEmailAndRowKey(this string src)
         {
             return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
