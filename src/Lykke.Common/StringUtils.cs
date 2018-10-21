@@ -12,6 +12,8 @@ namespace Common
     [PublicAPI]
     public static class StringUtils
     {
+        private static readonly string AzureInvalidSymbolsPattern = @"[\p{C}|/|\\|#|?]";
+
         // Is needed for TrimAllSpacesAroundNullSafe()
         private static readonly char[] SpaceCharsArray = { ' ', '\t', '\n', '\r'};
 
@@ -573,14 +575,58 @@ namespace Common
                 : phone;
         }
         
+        /// <summary>
+        /// Checks if string value is valid for usage as Azure TableStorage partition or row key.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
         public static bool IsValidPartitionOrRowKey(this string src)
         {
             if (string.IsNullOrWhiteSpace(src))
                 return false;
             
-            return !Regex.IsMatch(src, @"[\p{C}|/|\\|#|?]");
+            return !Regex.IsMatch(src, AzureInvalidSymbolsPattern);
         }
-        
+
+        /// <summary>
+        /// Replaces symbols which are not valid for usage in Azure TableStorage partition or row key.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="replaceStr">The string to replace invalid symbols with</param>
+        /// <returns></returns>
+        public static string RefinePartitionOrRowKey(this string src, string replaceStr = "_")
+        {
+            if (string.IsNullOrWhiteSpace(src))
+                throw new ArgumentNullException(nameof(src));
+
+            if (string.IsNullOrWhiteSpace(replaceStr))
+                throw new ArgumentNullException(nameof(replaceStr));
+
+            if (!replaceStr.IsValidPartitionOrRowKey())
+                throw new ArgumentException("String contains invalid symbols", nameof(replaceStr));
+
+            return new Regex(AzureInvalidSymbolsPattern).Replace(src, replaceStr);
+        }
+
+        /// <summary>
+        /// Makes sure that string is valid for usage as Azure TableStorage partition or row key.
+        /// Replaces invalid symbols if any.
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        public static string EnsurePartitionOrRowKeyValid(this string src)
+        {
+            if (string.IsNullOrWhiteSpace(src))
+                throw new ArgumentNullException(nameof(src));
+
+            if (!src.IsValidPartitionOrRowKey())
+            {
+                return src.RefinePartitionOrRowKey();
+            }
+
+            return src;
+        }
+
         public static bool IsValidEmailAndRowKey(this string src)
         {
             return src.IsValidEmail() && src.IsValidPartitionOrRowKey();
