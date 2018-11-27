@@ -5,10 +5,10 @@ namespace Lykke.Common
 {
     public class CountryItem
     {
-        public string Id { get; set; }
-        public string Iso2 { get; set; }
-        public string Name { get; set; }
-        public string Prefix { get; set; }
+        public string Id { get; }
+        public string Iso2 { get; }
+        public string Name { get; }
+        public string Prefix { get; }
 
         public CountryItem(string iso3, string prefix)
         {
