@@ -50,7 +50,7 @@ namespace Common
         {
 
             #region ISO Codes3To2
-            {"ABW", "AB"},
+            {"ABW", "AW"},
             {"AFG", "AF"},
             {"AGO", "AO"},
             {"AIA", "AI"},
