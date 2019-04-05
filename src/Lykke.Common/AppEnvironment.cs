@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.PlatformAbstractions;
 
@@ -18,11 +19,11 @@ namespace Lykke.Common
         /// <summary>
         /// Version of the app
         /// </summary>
-        public static string Version { get; } = PlatformServices.Default.Application.ApplicationVersion;
+        public static string Version { get; } = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
         /// <summary>
         /// Name of the app
         /// </summary>
-        public static string Name { get; } = PlatformServices.Default.Application.ApplicationName;
+        public static string Name { get; } = Assembly.GetEntryAssembly().GetName().Name;
     }
 }
