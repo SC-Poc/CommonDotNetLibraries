@@ -1,5 +1,5 @@
-﻿using Autofac;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using Lykke.Common;
 
 namespace Common
 {
@@ -16,7 +16,7 @@ namespace Common
     /// </p>
     /// </remarks>
     [PublicAPI]
-    public interface ITimerTrigger : IStartable, IStopable
+    public interface ITimerTrigger : IStartStop
     {
         /// <summary>
         /// This event will be triggered when timer period is ellapsed.

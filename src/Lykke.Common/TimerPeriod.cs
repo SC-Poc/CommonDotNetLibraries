@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.PlatformAbstractions;
-using Autofac;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common;
 using Lykke.Common.Log;
 
 namespace Common
@@ -18,7 +18,7 @@ namespace Common
     /// Timer that runs Execute method in a loop with a fixed time interval between runs (Execute method execution time is not included).
     /// </summary>
     [PublicAPI]
-    public abstract class TimerPeriod : IStartable, IStopable, ITimerCommand
+    public abstract class TimerPeriod : IStartStop, ITimerCommand
     {
         private readonly string _componentName;
         private readonly int _periodMs;
