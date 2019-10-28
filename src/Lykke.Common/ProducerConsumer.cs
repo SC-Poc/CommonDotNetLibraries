@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common;
 using Lykke.Common.Log;
 
 namespace Common
@@ -14,7 +14,7 @@ namespace Common
     /// </summary>
     /// <typeparam name="T">Item type to produce and consume</typeparam>
     [PublicAPI]
-    public abstract class ProducerConsumer<T> : IStartable, IStopable where T : class
+    public abstract class ProducerConsumer<T> : IStartStop where T : class
     {
         private readonly object _startStopLockobject = new object();
         private readonly Queue<TaskCompletionSource<T>> _queue = new Queue<TaskCompletionSource<T>>();

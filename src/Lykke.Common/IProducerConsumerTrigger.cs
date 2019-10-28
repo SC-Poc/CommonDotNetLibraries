@@ -1,5 +1,5 @@
-﻿using Autofac;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using Lykke.Common;
 
 namespace Common
 {
@@ -13,7 +13,7 @@ namespace Common
     /// </p>
     /// </remarks>
     [PublicAPI]
-    public interface IProducerConsumerTrigger<T> : IStartable, IStopable
+    public interface IProducerConsumerTrigger<T> : IStartStop
     {
         /// <summary>
         /// <p>
