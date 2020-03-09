@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0B6615DC-BCC1-4406-A0BB-1C7D6A326882}"
 EndProject
@@ -12,6 +12,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Common", "src\Lykke.Common\Lykke.Common.csproj", "{5E934B1B-8776-4986-8780-D84778E560F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Tests", "tests\Common.Tests\Common.Tests.csproj", "{67F87E5A-FDA9-4439-895E-F7E23F2BF9E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{76E64465-3CA2-4E1D-B0BB-BD42C7F01FDD}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Deploy-Nuget.yml = .github\workflows\Deploy-Nuget.yml
+		.github\workflows\ValidateCommit.yml = .github\workflows\ValidateCommit.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

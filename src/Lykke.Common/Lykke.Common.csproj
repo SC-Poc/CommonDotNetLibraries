@@ -3,17 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Lykke.Common</AssemblyName>
-    <PackageId>Lykke.Common</PackageId>
-    <PackageTags>Lykke Common</PackageTags>
-    <PackageProjectUrl>https://github.com/LykkeCity/CommonDotNetLibraries</PackageProjectUrl>
+    <PackageId>Swisschain.Lykke.Common</PackageId>
+    <PackageTags>Swisschain Lykke Common</PackageTags>
+    <PackageProjectUrl>https://github.com/SC-Poc/CommonDotNetLibraries</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/LykkeCity/CommonDotNetLibraries/blob/master/LICENSE</PackageLicenseUrl>
     <Version>1.0.1</Version>
-    <Authors>Lykke</Authors>
+    <Authors>Swisschain</Authors>
     <Description>Lykke common tools and utilities</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright 2017 (c) Lykke Corp. All rights reserved.</Copyright>
+    <Copyright></Copyright>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <NeutralLanguage>en-001</NeutralLanguage>
+    <Company>Swisschain</Company>
+    <Product>Swisschain.Lykke.Common</Product>
+    <RepositoryUrl>https://github.com/SC-Poc/CommonDotNetLibraries</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
